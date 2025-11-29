@@ -1,0 +1,6 @@
+# Meta development files
+tasks/
+
+# Keep templates
+!tasks/task.template.md
+!tasks/planner.md
