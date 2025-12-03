@@ -1,7 +1,7 @@
 ---
 name: smaqit.deployment
 description: Deploys code using infrastructure specs
-tools: ["read", "edit", "search", "shell"]
+tools: ['edit', 'search', 'runCommands']
 ---
 
 # Deployment Agent

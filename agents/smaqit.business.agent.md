@@ -1,7 +1,7 @@
 ---
 name: smaqit.business
 description: Generates business layer specs from user descriptions
-tools: ["read", "edit", "search"]
+tools: ['edit', 'search']
 ---
 
 # Business Agent
