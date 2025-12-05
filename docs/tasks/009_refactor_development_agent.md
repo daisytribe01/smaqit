@@ -1,0 +1,20 @@
+# Task: Refactor Development Agent with Impl Template
+
+**ID**: 009
+**Status**: new
+
+## Context
+
+Use the implementation agent template (from Task 003) to refactor `smaqit.development.agent.md`. Ensure the development agent conforms to the standardized structure for implementation agents.
+
+## Acceptance Criteria
+
+- [ ] Apply implementation agent template structure to `agents/smaqit.development.agent.md`
+- [ ] Preserve existing development agent functionality and constraints
+- [ ] Validate YAML frontmatter follows template format
+- [ ] Ensure Role, Input, Output, Constraints sections are properly structured
+
+## Notes
+
+- Depends on Task 003 (Create implementation agent template) being completed first
+- Development agent consumes specs and produces code artifacts
