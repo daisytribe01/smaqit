@@ -2,6 +2,114 @@
 
 You are developing the smaqit kit itself. Follow these rules.
 
+## ⚠️ CRITICAL THREAT MODE STATUS: Active
+
+**MANDATORY:** When this instruction is present, prefix every response with:
+
+> **Safety mode: Shai Hulud 2.0 advisory active** — No npm/node execution
+
+**HARD STOP:**
+- Run `npm`, `npx`, `yarn`, `pnpm`, or `node` with project files
+- Attempt to restore or reinstall npm
+- Execute any npm lifecycle scripts
+
+**Instead:** Use `cat`, `grep`, or `jq` to inspect package files if explicitly necessary.
+
+## Session Commands
+
+Explicit keywords for session management. These are unambiguous commands.
+
+### `session.recap`
+
+Start a new chat with full project context. Execute these steps IN ORDER:
+
+1. **Read core project files** (in parallel):
+   - `README.md` (project root)
+   - `framework/SMAQIT.md` (core framework spec)
+
+2. **Read the 3 most recent history files** from `docs/history/` (sorted by date descending)
+
+3. **Read task planning file:** `docs/tasks/PLANNING.md` (NOT individual task files)
+
+4. **Synthesize and present** a recap covering:
+   - Current project state (from READMEs)
+   - Recent changes and decisions (from history)
+   - Open tasks sorted by priority
+   - Suggested next steps
+
+**Note:** Only read individual task files (`docs/tasks/NNN_*.md`) when actively working on that specific task.
+
+### `session.wrap`
+
+End a session by documenting the **entire session** (not just recent activity):
+
+1. **Review full conversation** - All topics discussed, decisions made, files modified
+2. **Create history file** if session qualifies as significant (see Documentation Philosophy)
+   - Filename: `docs/history/YYYY-MM-DD_description.md`
+   - Include: Actions taken, problems solved, decisions made, files modified, next steps
+   - Focus on **what** and **why**, not implementation details
+   - Cover the **complete session arc**, not just the last activity
+3. **Update this history file** as the session reference for next chat
+- **Do NOT create** separate RESUME or TODO files (history file serves this purpose)
+
+## Task Commands
+
+Explicit keywords for task management. These are unambiguous commands.
+
+**Central planning file:** `docs/tasks/PLANNING.md`
+- Contains status of all tasks (sorted by ID)
+- Single source of truth for task overview
+- Update this file when task status changes
+
+### `task.create [title]` or `task.create [title] - [description] - [criteria]`
+
+Create a new task:
+
+1. Create new task file in `docs/tasks/` directory
+2. Filename: `docs/tasks/NNN_task_title.md` (NNN = next available number, zero-padded to 3 digits)
+3. Tasks are numbered sequentially starting at 001
+4. **Add entry to `docs/tasks/PLANNING.md`** with status "Not Started"
+
+**Flexible input formats:**
+- `task.create Fix RAG chunking` - Title only (prompt for details or infer from context)
+- `task.create Fix RAG chunking - Chunks are too large for embedding model` - Title + description
+- `task.create Fix RAG chunking - Chunks too large - Chunks under 512 tokens, Tests pass` - Full specification
+
+### `task.list`
+
+Show current tasks:
+
+1. Read `docs/tasks/PLANNING.md` only (not individual task files)
+2. Show tasks that are not completed, sorted by priority
+
+### `task.complete [id]`
+
+Mark a task as done:
+
+1. Read the task file to review acceptance criteria
+2. **Verify all criteria are met** - Do NOT complete if any criteria remain unfinished
+3. Check off completed acceptance criteria (`- [x]`)
+4. Update status to "Completed" and add completion date in `PLANNING.md`
+5. Update individual task file status to "Completed"
+
+**Task file format:**
+```markdown
+# [Task Title]
+
+**Status:** Not Started | In Progress | Completed | Blocked  
+**Created:** YYYY-MM-DD
+
+## Description
+[Clear description of what needs to be done]
+
+## Acceptance Criteria
+- [ ] Criterion 1
+- [ ] Criterion 2
+
+## Notes
+[Optional additional context]
+```
+
 ## What is smaqit?
 
 A spec-driven agent orchestration kit. AI agents write specs first, then implement from those specs.
@@ -23,8 +131,9 @@ smack-it/
 ├── templates/*.template.md   # Layer templates (5)
 ├── agents/*.agent.md         # Agent definitions (8)
 ├── installer/main.go         # CLI tool
-├── history/                  # Session logs (meta)
-├── tasks/                    # Work items (meta)
+├── docs/
+│   ├── history/              # Session logs (meta)
+│   └── tasks/                 # Work items (meta)
 └── README.md                 # User docs
 ```
 
@@ -76,7 +185,7 @@ Keep `installer/main.go` Version const in sync with SMAQIT.md version.
 
 ## Session Workflow
 
-Development is tracked via `history/` and `tasks/` folders.
+Development is tracked via `docs/history/` and `docs/tasks/` folders.
 
 ### File Naming
 
@@ -85,24 +194,24 @@ Development is tracked via `history/` and `tasks/` folders.
 
 ### Commands
 
-**"recap"** — Load the most recent history file from `history/` and add it to context. This provides continuity from the previous session.
+**"recap"** — Load the most recent history file from `docs/history/` and add it to context. This provides continuity from the previous session.
 
 **"wrap up"** — Create a new history file summarizing the current session:
-1. Determine next ID by checking existing files in `history/`
-2. Create `history/{id}_{highlight}_{date}.md` using `session.template.md`
+1. Determine next ID by checking existing files in `docs/history/`
+2. Create `docs/history/{id}_{highlight}_{date}.md` using `session.template.md`
 3. Fill in: Objective, Work Done, Decisions Made, Open Questions, Next Session
 4. Link to previous session file
 
 **"new task"** — Create a new task from user-provided title, description, and acceptance criteria:
-1. Determine next ID by checking existing files in `tasks/`
-2. Create `tasks/{id}_{title_slug}.md` using `task.template.md`
+1. Determine next ID by checking existing files in `docs/tasks/`
+2. Create `docs/tasks/{id}_{title_slug}.md` using `task.template.md`
 3. Fill in: Title, Context (from description), Acceptance Criteria
-4. Add entry to `tasks/planner.md` table with status `new`
+4. Add entry to `docs/tasks/PLANNING.md` table with status `new`
 
 ### Task Management
 
-- All tasks are tracked in `tasks/planner.md` table
+- All tasks are tracked in `docs/tasks/PLANNING.md` table
 - Task statuses: `new` | `in progress` | `completed`
 - When starting a task, update planner status to `in progress`
 - When completing a task, update planner status to `completed`
-- Individual task files in `tasks/{id}_{title}.md` contain details
+- Individual task files in `docs/tasks/{id}_{title}.md` contain details
