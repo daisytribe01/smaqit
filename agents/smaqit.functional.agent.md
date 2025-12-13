@@ -13,7 +13,7 @@ Specification agent for Functional layer.
 - `specs/business/*.md`
 
 ## Output
-- `specs/functional/*.md` following `templates/functional.template.md`
+- `specs/functional/*.md` following `templates/specs/functional.template.md`
 
 ## Constraints
 - Reference business specs

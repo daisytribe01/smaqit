@@ -13,7 +13,7 @@ Specification agent for Business layer.
 - User description
 
 ## Output
-- `specs/business/*.md` following `templates/business.template.md`
+- `specs/business/*.md` following `templates/specs/business.template.md`
 
 ## Constraints
 - No technical details

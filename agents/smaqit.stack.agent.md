@@ -13,7 +13,7 @@ Specification agent for Stack layer.
 - `specs/functional/*.md`
 
 ## Output
-- `specs/stack/*.md` following `templates/stack.template.md`
+- `specs/stack/*.md` following `templates/specs/stack.template.md`
 
 ## Constraints
 - Reference functional specs

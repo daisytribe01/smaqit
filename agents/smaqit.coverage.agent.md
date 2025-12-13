@@ -16,7 +16,7 @@ Specification agent for Coverage layer.
 - `specs/infrastructure/*.md`
 
 ## Output
-- `specs/coverage/*.md` following `templates/coverage.template.md`
+- `specs/coverage/*.md` following `templates/specs/coverage.template.md`
 
 ## Constraints
 - Tests against deployed application

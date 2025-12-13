@@ -13,7 +13,7 @@ Specification agent for Infrastructure layer.
 - `specs/stack/*.md`
 
 ## Output
-- `specs/infrastructure/*.md` following `templates/infrastructure.template.md`
+- `specs/infrastructure/*.md` following `templates/specs/infrastructure.template.md`
 
 ## Constraints
 - Reference stack specs
