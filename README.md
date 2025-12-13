@@ -43,6 +43,41 @@ smaqit develop
 | `smaqit validate` | Run validate phase |
 | `smaqit status` | Show current state |
 
+
+---
+
+## Architecture
+
+smaqit kit is organized in hierarchical levels:
+
+```
+smaqit
+├── Level 0: Framework (Foundation)
+│   ├── framework/SMAQIT.md      # Core principles
+│   ├── framework/LAYERS.md      # Layer definitions (Business → Coverage)
+│   └── framework/PHASES.md      # Phase workflows (Develop → Validate)
+│
+├── Level 1: Templates (Structure)
+│   ├── framework/TEMPLATES.md   # Template rules
+│   ├── templates/specs/         # Specification templates (5)
+│   └── templates/agents/        # Agent templates (2)
+│
+├── Level 2: Agents & Artifacts (Instances)
+│   ├── framework/AGENTS.md      # Agent behaviors
+│   ├── framework/ARTIFACTS.md   # Artifact rules
+│   ├── agents/*.agent.md        # Agent definitions (8)
+│   └── specs/**/*.md            # Specification documents
+│
+└── Level 3: Application (Output)
+    └── The built system
+```
+
+**Level dependencies:**
+- Level 1 consumes Level 0 (templates follow framework rules)
+- Level 2 consumes Level 1 (agents/specs follow templates)
+- Level 3 consumes Level 2 (application follows specs)
+
+
 ## License
 
 MIT
