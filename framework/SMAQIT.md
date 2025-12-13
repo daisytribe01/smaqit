@@ -1,84 +1,165 @@
 # smaqit Framework
 
-**Version**: 0.1.0
+Spec-driven agent orchestration. AI agents write specifications first, then implement from those specs.
 
-## Layers
+## Core Principles
 
-| Layer | Purpose |
-|-------|---------|
-| Business | Use cases |
-| Functional | Behaviors, contracts, flows |
-| Stack | Languages, frameworks, libraries |
-| Infrastructure | Compute, networking, observability |
-| Coverage | Integration, E2E, acceptance testing |
+### Specs Before Code
 
-## Phases
+**Never write implementation without a corresponding specification.**
 
-| Phase | Spec Layers | Implementation Agent |
-|-------|-------------|----------------------|
-| Develop | Business → Functional → Stack | Development |
-| Deploy | Infrastructure | Deployment |
-| Validate | Coverage | Validation |
+Specifications are not documentation—they are the source of truth. Implementation agents consume specs as contracts, not guidelines. This inverts the common pattern where code comes first and docs follow.
 
-## Agents
+### Traceability Across Layers
 
-### Specification Agents
+**Every output MUST trace to an input.**
 
-| Agent | Layer | Input | Output |
-|-------|-------|-------|--------|
-| Business | Business | User description | `specs/business/*.md` |
-| Functional | Functional | Business specs | `specs/functional/*.md` |
-| Stack | Stack | Functional specs | `specs/stack/*.md` |
-| Infrastructure | Infrastructure | Stack specs | `specs/infrastructure/*.md` |
-| Coverage | Coverage | All specs | `specs/coverage/*.md` |
+- Specs reference upstream specs or user input
+- Code references specs
+- Tests reference requirements
 
-### Implementation Agents
+Traceability enables impact analysis: when a requirement changes, the chain of dependencies is explicit.
 
-| Agent | Phase | Input | Output |
-|-------|-------|-------|--------|
-| Development | Develop | Develop specs | Code |
-| Deployment | Deploy | Code + Infra specs | Running system |
-| Validation | Validate | Deployed app + Coverage specs | Validation report |
+### Self-Validating Agents
 
-## Usage Rules
+**Agents validate their own output before declaring completion.**
 
-### Core Principle
+Agents are not fire-and-forget. Each agent has completion criteria and MUST verify them before finishing. This shifts quality assurance left—into the agent itself, not a separate review step.
 
-**Specs before code.** Never write implementation without a corresponding specification.
+### Template-Constrained Output
 
-### Layer Order
+**Templates are cognitive scaffolds, not suggestions.**
 
-Always work through layers in order:
+Templates define the exact structure agents MUST produce. This ensures:
+- Consistent output across runs
+- Predictable input for downstream consumers
+- Reduced LLM variance
 
-1. Business → 2. Functional → 3. Stack → 4. Infrastructure → 5. Coverage
+### Accept Mutability, Validate Behavior
 
-### File Locations (in smaqit-enabled projects)
+**Embrace non-determinism in artifacts, enforce determinism in outcomes.**
 
-- Specs: `.smaqit/specs/{layer}/`
-- Templates: `.smaqit/templates/`
-- Framework: `.smaqit/SMAQIT.md`
-- Agents: `.github/agents/`
+LLMs rarely generate identical output twice. Rather than fighting this inherent variability, smaqit accepts it:
 
-### When Developing a Feature
+- **Mutable artifacts**: Code, configurations, and documents may vary between runs
+- **Immutable behavior**: Specifications define expected outcomes, not implementation details
+- **Validation over reproducibility**: Success is measured by passing acceptance criteria, not by identical output
 
-1. Check if business spec exists in `.smaqit/specs/business/`
-2. If not, write business spec first using `business.template.md`
-3. Then functional spec using `functional.template.md`
-4. Then stack spec using `stack.template.md`
-5. Only then write code based on the output of the previous layers
+The specification is the invariant. The implementation is the variable.
 
-### When Deploying
+## Iteration Through Experimentation
 
-1. Check if infrastructure spec exists in `.smaqit/specs/infrastructure/`
-2. If not, write infrastructure spec first using `infrastructure.template.md`
-3. Only then deploy
+smaqit is designed to evolve through use. The current framework represents a minimal viable structure—sufficient to test the spec-driven hypothesis, but expected to adapt as real constraints emerge.
 
-### When Validating
+Complexity is added only when proven necessary by real project experience.
 
-1. Check if coverage spec exists in `.smaqit/specs/coverage/`
-2. If not, write coverage spec first using `coverage.template.md`
-3. Tests run against deployed app, not local
+### Evidence Over Theory
 
-### Template Compliance
+Framework changes require evidence from actual application:
 
-When writing specs, use the exact structure from `.smaqit/templates/{layer}.template.md`. Do not add or remove sections.
+| Change Type | Required Evidence |
+|-------------|-------------------|
+| New layer | Multiple projects demonstrate a missing concern |
+| New phase | Existing phases cannot accommodate a workflow |
+| Structural change | Current structure blocks common patterns |
+
+Anticipated edge cases do not justify framework changes. Observed constraints do.
+
+### Explicit Assumptions
+
+The framework operates under assumptions that may be revised:
+
+| Assumption | Status | Revision Trigger |
+|------------|--------|------------------|
+| Layers are strictly linear | Active | Projects require multi-layer dependencies |
+| Phases are sequential | Active | Parallel workflows prove necessary |
+| Amendments are sufficient for conflicts | Active | Amendment overhead becomes prohibitive |
+| Coverage reads all layers | Active | Subset coverage proves sufficient |
+
+When an assumption is challenged by evidence, it becomes a candidate for revision.
+
+### Amendment Protocol
+
+When applying smaqit reveals limitations:
+
+1. **Document** — Record the constraint encountered with context
+2. **Propose** — Suggest framework amendment with rationale
+3. **Test** — Apply amendment to subsequent projects
+4. **Formalize** — If amendment improves outcomes, integrate into framework
+
+## Design Philosophy
+
+### Progressive Refinement
+
+Each layer adds precision while preserving upstream intent:
+
+```
+Business (intent) → Functional (behavior) → Stack (tools) → Infrastructure (environment) → Coverage (verification)
+```
+
+No layer modifies upstream specifications. They only add detail within its scope.
+
+### Explicit Over Implicit
+
+When in doubt, make it explicit:
+- State assumptions rather than assume shared context
+- Define scope boundaries rather than imply them
+- Reference sources rather than expect inference
+
+LLMs benefit from explicit context. Humans benefit from explicit documentation.
+
+### Fail-Fast on Ambiguity
+
+When input is unclear:
+- Stop and request clarification
+- Do not invent requirements
+- Flag assumptions explicitly
+
+The cost of clarification is lower than the cost of rework from incorrect assumptions.
+
+## Framework Files
+
+| File | Purpose |
+|------|---------|
+| [LAYERS](LAYERS.md) | Five specification layers and their dependencies |
+| [PHASES](PHASES.md) | Three development phases and their workflows |
+| [AGENTS](AGENTS.md) | Specification and implementation agent behaviors |
+| [SPECIFICATIONS](SPECIFICATIONS.md) | Specification artifact rules and formats |
+| [IMPLEMENTATIONS](IMPLEMENTATIONS.md) | Implementation artifact rules and principles |
+
+## Quick Reference
+
+### Layers
+
+| Layer | Question | Purpose |
+|-------|----------|---------|
+| Business | Why? | Use cases, actors, goals |
+| Functional | What? | Behaviors, contracts, flows |
+| Stack | With what? | Languages, frameworks, libraries |
+| Infrastructure | Where? | Compute, networking, observability |
+| Coverage | Verified? | Integration, E2E, acceptance testing |
+
+### Phases
+
+| Phase | Spec Agents | Impl Agent | Output |
+|-------|-------------|------------|--------|
+| Develop | Business → Functional → Stack | Development | Working application |
+| Deploy | Infrastructure | Deployment | Running system |
+| Validate | Coverage | Validation | Validation report |
+
+## File Locations (in smaqit-enabled projects)
+
+```
+project/
+├── .smaqit/
+│   ├── framework/        # Framework files (this directory)
+│   ├── specs/
+│   │   ├── business/
+│   │   ├── functional/
+│   │   ├── stack/
+│   │   ├── infrastructure/
+│   │   └── coverage/
+│   └── templates/        # Layer templates
+└── .github/
+    └── agents/           # Agent definitions
+```

@@ -47,10 +47,23 @@ Commands:
 }
 
 func cmdInit() {
-	// TODO: Create .smaqit/ directory
-	// TODO: Copy framework/SMAQIT.md → .smaqit/SMAQIT.md
+	// TODO: Create .smaqit/ directory structure:
+	//   .smaqit/
+	//   ├── framework/
+	//   ├── templates/
+	//   └── specs/
+	//       ├── business/
+	//       ├── functional/
+	//       ├── stack/
+	//       ├── infrastructure/
+	//       └── coverage/
+	//
+	// TODO: Copy framework/ → .smaqit/framework/ (entire directory)
+	//   - SMAQIT.md, LAYERS.md, PHASES.md, AGENTS.md
+	//   - SPECIFICATIONS.md, IMPLEMENTATIONS.md
+	//
 	// TODO: Copy templates/*.template.md → .smaqit/templates/
-	// TODO: Create .smaqit/specs/{business,functional,stack,infrastructure,coverage}/
+	//
 	// TODO: Create .github/agents/ directory
 	// TODO: Copy agents/*.agent.md → .github/agents/
 	fmt.Println("init: scaffold .smaqit/ and .github/agents/")

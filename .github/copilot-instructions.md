@@ -1,19 +1,6 @@
 # Copilot Instructions for smaqit Development
 
-You are developing the smaqit kit itself. Follow these rules.
-
-## ⚠️ CRITICAL THREAT MODE STATUS: Active
-
-**MANDATORY:** When this instruction is present, prefix every response with:
-
-> **Safety mode: Shai Hulud 2.0 advisory active** — No npm/node execution
-
-**HARD STOP:**
-- Run `npm`, `npx`, `yarn`, `pnpm`, or `node` with project files
-- Attempt to restore or reinstall npm
-- Execute any npm lifecycle scripts
-
-**Instead:** Use `cat`, `grep`, or `jq` to inspect package files if explicitly necessary.
+You are developing the smaqit kit.
 
 ## Session Commands
 
@@ -116,7 +103,7 @@ A spec-driven agent orchestration kit. AI agents write specs first, then impleme
 
 ## Kit Components
 
-- **SMAQIT.md** — Defines layers, phases, agents, and usage rules
+- **Framework files** — SMAQIT.md (index + principles), LAYERS.md, PHASES.md, AGENTS.md, SPECIFICATIONS.md, IMPLEMENTATIONS.md
 - **Templates** — Constrain agent outputs per layer
 - **Agents** — GitHub Custom Agents (`.agent.md` format)
 - **Installer** — Go CLI that scaffolds smaqit into user projects
@@ -126,14 +113,20 @@ A spec-driven agent orchestration kit. AI agents write specs first, then impleme
 
 **Source (this repo)** — Kit development files:
 ```
-smack-it/
-├── framework/SMAQIT.md       # Core framework spec
+smaqit/
+├── framework/
+│   ├── SMAQIT.md             # Index + core principles
+│   ├── LAYERS.md             # Layer definitions
+│   ├── PHASES.md             # Phase workflows
+│   ├── AGENTS.md             # Agent behaviors
+│   ├── SPECIFICATIONS.md     # Spec artifact rules
+│   └── IMPLEMENTATIONS.md    # Impl artifact rules
 ├── templates/*.template.md   # Layer templates (5)
 ├── agents/*.agent.md         # Agent definitions (8)
 ├── installer/main.go         # CLI tool
 ├── docs/
 │   ├── history/              # Session logs (meta)
-│   └── tasks/                 # Work items (meta)
+│   └── tasks/                # Work items (meta)
 └── README.md                 # User docs
 ```
 
@@ -141,7 +134,7 @@ smack-it/
 ```
 user-project/
 ├── .smaqit/
-│   ├── SMAQIT.md             # Copied from framework/
+│   ├── framework/            # Copied from framework/
 │   ├── templates/            # Copied from templates/
 │   └── specs/
 │       ├── business/
@@ -163,18 +156,25 @@ Use GitHub Custom Agent format:
 - YAML frontmatter: name, description, tools
 - Markdown body: Role, Input, Output, Constraints
 
-## When Editing SMAQIT.md
+## When Editing Framework Files
 
-This is the source of truth for:
-- Layer definitions and order
-- Phase definitions
-- Agent mappings
-- Usage rules for smaqit-enabled projects
+The framework is split across multiple files in `framework/`:
+
+| File | Contains |
+|------|----------|
+| SMAQIT.md | Index, core principles, quick reference |
+| LAYERS.md | Layer definitions and dependencies |
+| PHASES.md | Phase workflows and transitions |
+| AGENTS.md | Agent behaviors and mappings |
+| SPECIFICATIONS.md | Spec artifact rules |
+| IMPLEMENTATIONS.md | Impl artifact rules and principles |
+
+Keep cross-references consistent when editing.
 
 ## When Editing Installer
 
 The CLI copies framework/, templates/, agents/ into user projects as:
-- `.smaqit/SMAQIT.md`
+- `.smaqit/framework/` (entire directory)
 - `.smaqit/templates/`
 - `.smaqit/specs/{layer}/`
 - `.github/agents/`
@@ -182,31 +182,6 @@ The CLI copies framework/, templates/, agents/ into user projects as:
 ## Version Sync
 
 Keep `installer/main.go` Version const in sync with SMAQIT.md version.
-
-## Session Workflow
-
-Development is tracked via `docs/history/` and `docs/tasks/` folders.
-
-### File Naming
-
-- History: `{id}_{session_highlight}_{date}.md` (e.g., `001_initial_scaffolding_2025-11-29.md`)
-- Tasks: `{id}_{task_title}.md` (e.g., `001_implement_init_command.md`)
-
-### Commands
-
-**"recap"** — Load the most recent history file from `docs/history/` and add it to context. This provides continuity from the previous session.
-
-**"wrap up"** — Create a new history file summarizing the current session:
-1. Determine next ID by checking existing files in `docs/history/`
-2. Create `docs/history/{id}_{highlight}_{date}.md` using `session.template.md`
-3. Fill in: Objective, Work Done, Decisions Made, Open Questions, Next Session
-4. Link to previous session file
-
-**"new task"** — Create a new task from user-provided title, description, and acceptance criteria:
-1. Determine next ID by checking existing files in `docs/tasks/`
-2. Create `docs/tasks/{id}_{title_slug}.md` using `task.template.md`
-3. Fill in: Title, Context (from description), Acceptance Criteria
-4. Add entry to `docs/tasks/PLANNING.md` table with status `new`
 
 ### Task Management
 

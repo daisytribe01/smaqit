@@ -14,4 +14,6 @@
 | 010 | Refactor deployment agent with impl template | new |
 | 011 | Refactor validation agent with impl template | new |
 | 012 | Create cross-platform Go installer build system | new |
-| 013 | Split SMAQIT.md into framework files | new |
+| 013 | Split SMAQIT.md into framework files | completed |
+| 014 | Define iterative development using smaqit | new |
+| 015 | Refine installation approach | new |
