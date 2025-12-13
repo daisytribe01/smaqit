@@ -12,7 +12,12 @@ Start a new chat with full project context. Execute these steps IN ORDER:
 
 1. **Read core project files** (in parallel):
    - `README.md` (project root)
-   - `framework/SMAQIT.md` (core framework spec)
+   - `framework/SMAQIT.md` (index + core principles)
+   - `framework/LAYERS.md` (layer definitions)
+   - `framework/PHASES.md` (phase workflows)
+   - `framework/AGENTS.md` (agent behaviors)
+   - `framework/SPECIFICATIONS.md` (spec artifact rules)
+   - `framework/IMPLEMENTATIONS.md` (impl artifact rules)
 
 2. **Read the 3 most recent history files** from `docs/history/` (sorted by date descending)
 
@@ -101,12 +106,15 @@ Mark a task as done:
 
 A spec-driven agent orchestration kit. AI agents write specs first, then implement from those specs.
 
+See [framework/SMAQIT.md](../framework/SMAQIT.md) for core principles and framework overview.
+
 ## Kit Components
 
-- **Framework files** — SMAQIT.md (index + principles), LAYERS.md, PHASES.md, AGENTS.md, SPECIFICATIONS.md, IMPLEMENTATIONS.md
-- **Templates** — Constrain agent outputs per layer
-- **Agents** — GitHub Custom Agents (`.agent.md` format)
-- **Installer** — Go CLI that scaffolds smaqit into user projects
+- **Framework files** (`framework/`) — See [SMAQIT.md](../framework/SMAQIT.md) for index
+- **Specification templates** (`templates/specs/`) — Structure for spec documents per layer
+- **Agent templates** (`templates/agents/`) — Structure for agent definitions
+- **Agents** (`agents/`) — GitHub Custom Agents (`.agent.md` format)
+- **Installer** (`installer/`) — Go CLI that scaffolds smaqit into user projects
 
 
 ## Source vs Artifacts
@@ -121,7 +129,9 @@ smaqit/
 │   ├── AGENTS.md             # Agent behaviors
 │   ├── SPECIFICATIONS.md     # Spec artifact rules
 │   └── IMPLEMENTATIONS.md    # Impl artifact rules
-├── templates/*.template.md   # Layer templates (5)
+├── templates/
+│   ├── specs/                # Specification templates (5)
+│   └── agents/               # Agent templates (2)
 ├── agents/*.agent.md         # Agent definitions (8)
 ├── installer/main.go         # CLI tool
 ├── docs/
@@ -146,30 +156,37 @@ user-project/
     └── agents/               # Copied from agents/
 ```
 
-## When Editing Templates
+## When Editing Specification Templates
 
-Keep sections minimal. Templates constrain agent output structure.
+Location: `templates/specs/`
+
+Specification templates define the structure agents use when producing spec documents.
+
+See [SPECIFICATIONS.md](../framework/SPECIFICATIONS.md) for template compliance rules.
+
+## When Editing Agent Templates
+
+Location: `templates/agents/`
+
+Agent templates define the structure for agent definition files:
+- `specification-agent.template.md` — For spec agents (business, functional, stack, infrastructure, coverage)
+- `implementation-agent.template.md` — For impl agents (development, deployment, validation)
+
+See [AGENTS.md](../framework/AGENTS.md) for agent behaviors, naming conventions, and placeholder conventions.
 
 ## When Editing Agents
 
-Use GitHub Custom Agent format:
-- YAML frontmatter: name, description, tools
-- Markdown body: Role, Input, Output, Constraints
+Location: `agents/`
+
+Agent definitions are the actual agents that consume templates and produce artifacts.
+
+When creating or refactoring agents, use the appropriate agent template from `templates/agents/` to ensure consistency.
 
 ## When Editing Framework Files
 
-The framework is split across multiple files in `framework/`:
+See [SMAQIT.md](../framework/SMAQIT.md) for the framework file index.
 
-| File | Contains |
-|------|----------|
-| SMAQIT.md | Index, core principles, quick reference |
-| LAYERS.md | Layer definitions and dependencies |
-| PHASES.md | Phase workflows and transitions |
-| AGENTS.md | Agent behaviors and mappings |
-| SPECIFICATIONS.md | Spec artifact rules |
-| IMPLEMENTATIONS.md | Impl artifact rules and principles |
-
-Keep cross-references consistent when editing.
+Keep cross-references between framework files consistent when editing.
 
 ## When Editing Installer
 
