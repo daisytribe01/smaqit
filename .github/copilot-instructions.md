@@ -15,9 +15,9 @@ Start a new chat with full project context. Execute these steps IN ORDER:
    - `framework/SMAQIT.md` (index + core principles)
    - `framework/LAYERS.md` (layer definitions)
    - `framework/PHASES.md` (phase workflows)
+   - `framework/TEMPLATES.md` (template structure rules)
    - `framework/AGENTS.md` (agent behaviors)
-   - `framework/SPECIFICATIONS.md` (spec artifact rules)
-   - `framework/IMPLEMENTATIONS.md` (impl artifact rules)
+   - `framework/ARTIFACTS.md` (artifact rules)
 
 2. **Read the 3 most recent history files** from `docs/history/` (sorted by date descending)
 
@@ -126,9 +126,9 @@ smaqit/
 │   ├── SMAQIT.md             # Index + core principles
 │   ├── LAYERS.md             # Layer definitions
 │   ├── PHASES.md             # Phase workflows
+│   ├── TEMPLATES.md          # Template structure rules
 │   ├── AGENTS.md             # Agent behaviors
-│   ├── SPECIFICATIONS.md     # Spec artifact rules
-│   └── IMPLEMENTATIONS.md    # Impl artifact rules
+│   └── ARTIFACTS.md          # Artifact rules
 ├── templates/
 │   ├── specs/                # Specification templates (5)
 │   └── agents/               # Agent templates (2)
@@ -162,7 +162,7 @@ Location: `templates/specs/`
 
 Specification templates define the structure agents use when producing spec documents.
 
-See [SPECIFICATIONS.md](../framework/SPECIFICATIONS.md) for template compliance rules.
+See [TEMPLATES.md](../framework/TEMPLATES.md) for template compliance rules.
 
 ## When Editing Agent Templates
 
@@ -172,7 +172,7 @@ Agent templates define the structure for agent definition files:
 - `specification-agent.template.md` — For spec agents (business, functional, stack, infrastructure, coverage)
 - `implementation-agent.template.md` — For impl agents (development, deployment, validation)
 
-See [AGENTS.md](../framework/AGENTS.md) for agent behaviors, naming conventions, and placeholder conventions.
+See [TEMPLATES.md](../framework/TEMPLATES.md) for agent behaviors, naming conventions, and placeholder conventions.
 
 ## When Editing Agents
 

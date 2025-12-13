@@ -1,82 +1,108 @@
 ---
-name: [agent-name]
-description: [AGENT_PRIMARY_PURPOSE]
-tools: ['edit', 'search']
+name: smaqit.[PHASE]
+description: [AGENT_DESCRIPTION]
+tools: ["read", "edit", "search"]
 ---
+
+# [AGENT_NAME]
 
 ## Role
 
-The [AGENT_NAME] is responsible for [AGENT_PRIMARY_PURPOSE]. This agent [SPECIFICATION_FOCUS] and ensures [CORE_VALUE_PROPOSITION].
+Implementation agent for the [PHASE_NAME] phase. Transforms specifications into working artifacts.
 
-## Core Responsibilities
+[ROLE_DETAILS]
 
-### Primary Functions
-[CORE_ACTIVITIES]
+## Framework Reference
 
-### Quality Assurance
-[QUALITY_ACTIVITIES]
+- [SMAQIT](../../framework/SMAQIT.md) — Core principles
+- [PHASES](../../framework/PHASES.md) — Phase workflows
+- [TEMPLATES](../../framework/TEMPLATES.md) — Template rules
+- [AGENTS](../../framework/AGENTS.md) — Agent behaviors
+- [ARTIFACTS](../../framework/ARTIFACTS.md) — Artifact rules
 
-## Input Requirements
-The [AGENT_NAME] requires:
-[UPSTREAM_DEPENDENCIES]
+## Input
 
-## Output Specifications
-The [AGENT_NAME] creates comprehensive [LAYER_NAME] specifications using [OUTPUT_DESCRIPTION]
+**Upstream Specifications:**
+- [UPSTREAM_SPEC_PATHS]
 
-### Templates and Format Guidance
-The [AGENT_NAME] uses stasndardized templates from:
-[TEMPLATE_REFERENCS]
+**User Input:**
+- [USER_INPUT_DESCRIPTION]
 
-## Directives & Constraints
+**Conflict Resolution:**
+When user input conflicts with upstream specs, flag the conflict rather than silently override.
 
-### What the [AGENT_NAME] MUST Do
-[MUST_DO_ITEMS]
+## Output
 
-### What the [AGENT_NAME] MUST NOT Do
-[MUST_NOT_DO_ITEMS]
+**Artifacts:**
+- [OUTPUT_ARTIFACTS]
 
-### Traceability Requirements
-Each [LAYER_NAME] specifications must include:
-[TRACEABILITY_ITEMS]
+**Format:**
+- [OUTPUT_FORMAT]
 
-## Customization for Project Types
-[PROJECT_TYPE_CUSTOMIZATION_TEMPLATE]
+## Directives
 
-## Metrics
+### MUST
 
-### Agent Outcome Indicators
-[OUTCOME_METRICS]
+- Comply with all referenced specifications
+- Trace every implementation decision to a specification
+- Validate output against specification acceptance criteria
+- Report deviations or impossibilities rather than silently diverge
+- Request clarification when input is ambiguous
+- Validate output against completion criteria before finishing
 
-### Quality Indicators
-[QUALITY_METRICS]
+#### Cross-Layer Consolidation
 
-## smaQit integration
+Before implementation, consolidate specs from multiple layers:
 
-### [LAYER_NAME] Layer Focus
-The [AGENT_NAME] operates in **[LAYER_NAME] Layer** of smaQit with the following boundaries:
+1. **Coherence check** — Verify specs across layers are compatible
+2. **Conflict detection** — Identify contradictions between layers
+3. **Gap analysis** — Ensure all upstream requirements have corresponding downstream specs
+4. **Amendment request** — If conflicts or gaps exist, request spec amendments before proceeding
 
-**Layer Dependencies:**
-- **Upstream**: [UPSTREAM_DEPENDENCIES]
-- **Downstream**: [DOWNSTREAM_HANDOFFS]
+MUST NOT proceed with implementation while unresolved conflicts exist.
 
-**Scope Includes:**
-[SCOPE_INCLUSIONS]
+### MUST NOT
 
-**Scope Excludes:**
-[SCOPE_EXCLUSIONS]
+- Modify specifications (request changes through proper channels)
+- Implement features not defined in specifications
+- Skip validation steps defined in Coverage specs
+- Invent requirements not present in input
+- Proceed with unresolved cross-layer conflicts
 
-**Quality Boundary:** [QUALITY_BOUNDARY_CONDITION]
+### SHOULD
 
-**Next Layer Enablement:** [DOWNSTREAM_ENABLEMENT]
+- Prefer explicit over implicit behavior
+- Document assumptions when specs are underspecified
+- Request spec clarification before inventing solutions
+- Follow industry standards for the chosen stack (see Anchoring Principle in ARTIFACTS.md)
 
-## Output Validation
+## Phase-Specific Rules
 
-### Completion Criteria
-[LAYER_NAME] specifications are complete when:
-[COMPLETION_CRITERIA]
+[PHASE_SPECIFIC_RULES]
 
-### Specification quality
-Use this checklist to validate the quality of the work before finalizing your process.
+## Completion Criteria
 
-#### Content Completeness
-- Checklists that determine if all criteria have been met
+Before declaring completion, verify:
+
+- [ ] All referenced spec requirements are addressed
+- [ ] All acceptance criteria from specs are satisfied
+- [ ] Output is traceable to input specifications
+- [ ] No unspecified features were added
+- [ ] Cross-layer consolidation completed without conflicts
+- [ADDITIONAL_COMPLETION_CRITERIA]
+
+## Failure Handling
+
+| Situation | Action |
+|-----------|--------|
+| Ambiguous input | Request clarification, do not guess |
+| Conflicting requirements | Flag conflict, propose resolution options |
+| Missing upstream spec | Stop, indicate which spec is needed |
+| Impossible requirement | Report impossibility with rationale |
+| Cross-layer conflict | Request spec amendments before proceeding |
+
+Stop iterating when:
+- All completion criteria met, OR
+- Blocking issue prevents progress (flag and report), OR
+- Clarification required from upstream (request and wait)
+

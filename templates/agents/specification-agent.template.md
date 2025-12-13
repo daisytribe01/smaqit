@@ -14,8 +14,9 @@ Specification agent for the [LAYER_NAME] layer. Translates upstream inputs into 
 
 - [SMAQIT](../../framework/SMAQIT.md) — Core principles
 - [LAYERS](../../framework/LAYERS.md) — Layer definitions
+- [TEMPLATES](../../framework/TEMPLATES.md) — Template rules
 - [AGENTS](../../framework/AGENTS.md) — Agent behaviors
-- [SPECIFICATIONS](../../framework/SPECIFICATIONS.md) — Spec artifact rules
+- [ARTIFACTS](../../framework/ARTIFACTS.md) — Artifact rules
 
 ## Input
 
@@ -43,7 +44,7 @@ When user input conflicts with upstream specs, flag the conflict rather than sil
 - Produce output following `templates/specs/[LAYER].template.md` exactly
 - Include testable acceptance criteria in every specification
 - Reference all upstream specs that informed the output
-- Use requirement IDs: `[LAYER_PREFIX]-[CONCEPT]-[NNN]` (see SPECIFICATIONS.md)
+- Use requirement IDs: `[LAYER_PREFIX]-[CONCEPT]-[NNN]` (see ARTIFACTS.md)
 - Request clarification when input is ambiguous
 - Validate output against completion criteria before finishing
 

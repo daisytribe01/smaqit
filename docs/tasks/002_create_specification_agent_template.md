@@ -1,7 +1,7 @@
 # Task: Create Specification Agent Template
 
 **ID**: 002
-**Status**: new
+**Status**: in progress
 
 ## Context
 
@@ -14,11 +14,11 @@ Currently, each agent (`.agent.md`) is hand-crafted. A specification agent templ
 
 ## Acceptance Criteria
 
-- [ ] Create `agents/specification.agent.template.md` (or similar location)
-- [ ] Template defines: YAML frontmatter structure, Role, Input, Output, Constraints sections
-- [ ] Template includes placeholders for layer-specific customization
+- [x] Create `agents/specification.agent.template.md` (or similar location)
+- [x] Template defines: YAML frontmatter structure, Role, Input, Output, Constraints sections
+- [x] Template includes placeholders for layer-specific customization
 - [ ] Existing spec agents (business, functional, stack, infrastructure, validation) align with template structure
-- [ ] Document usage in copilot-instructions or SMAQIT.md
+- [x] Document usage in copilot-instructions or SMAQIT.md
 
 ## Notes
 

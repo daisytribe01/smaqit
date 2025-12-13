@@ -3,7 +3,7 @@
 | ID | Title | Status |
 |----|-------|--------|
 | 001 | Create smaq commands file | new |
-| 002 | Create specification agent template | new |
+| 002 | Create specification agent template | in progress |
 | 003 | Create implementation agent template | new |
 | 004 | Refactor business agent with spec template | new |
 | 005 | Refactor functional agent with spec template | new |
