@@ -123,9 +123,9 @@ The cost of clarification is lower than the cost of rework from incorrect assump
 |------|---------|
 | [LAYERS](LAYERS.md) | Five specification layers and their dependencies |
 | [PHASES](PHASES.md) | Three development phases and their workflows |
-| [AGENTS](AGENTS.md) | Specification and implementation agent behaviors |
-| [SPECIFICATIONS](SPECIFICATIONS.md) | Specification artifact rules and formats |
-| [IMPLEMENTATIONS](IMPLEMENTATIONS.md) | Implementation artifact rules and principles |
+| [TEMPLATES](TEMPLATES.md) | Template structure rules for specs and agents |
+| [AGENTS](AGENTS.md) | Agent behaviors (actors) |
+| [ARTIFACTS](ARTIFACTS.md) | Artifact rules (outputs) |
 
 ## Quick Reference
 

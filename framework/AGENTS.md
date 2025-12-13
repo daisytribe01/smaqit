@@ -28,12 +28,12 @@ All smaqit agents—specification and implementation—share these foundational 
 
 ## Naming Convention
 
-Agents follow the pattern: `smaqit.{layer}` for specification agents and `smaqit.{phase}` for implementation agents.
+Agents follow the pattern: `smaqit.[LAYER]` for specification agents and `smaqit.[PHASE]` for implementation agents.
 
 | Type | Pattern | Examples |
 |------|---------|----------|
-| Specification | `smaqit.{layer}` | `smaqit.business`, `smaqit.functional`, `smaqit.stack` |
-| Implementation | `smaqit.{phase}` | `smaqit.development`, `smaqit.deployment`, `smaqit.validation` |
+| Specification | `smaqit.[LAYER]` | `smaqit.business`, `smaqit.functional`, `smaqit.stack` |
+| Implementation | `smaqit.[PHASE]` | `smaqit.development`, `smaqit.deployment`, `smaqit.validation` |
 
 ## Specification Agents
 
@@ -194,5 +194,5 @@ When an agent cannot complete:
 - [SMAQIT](SMAQIT.md) — Framework overview and principles
 - [LAYERS](LAYERS.md) — Layer definitions and dependencies
 - [PHASES](PHASES.md) — Phase workflows and transitions
-- [SPECIFICATIONS](SPECIFICATIONS.md) — Specification artifacts
-- [IMPLEMENTATIONS](IMPLEMENTATIONS.md) — Implementation artifacts
+- [TEMPLATES](TEMPLATES.md) — Template structure rules
+- [ARTIFACTS](ARTIFACTS.md) — Artifact rules

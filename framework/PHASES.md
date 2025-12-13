@@ -16,7 +16,7 @@ Each phase:
 3. **Implements** — Implementation agent produces and executes artifacts
 4. **Verifies** — Implementation agent confirms success before phase completion
 
-Phases are strictly sequential. Deploy cannot begin until Develop completes. Validate cannot begin until Deploy completes. This constraint is subject to revision based on real-world usage (see [PRINCIPLES](PRINCIPLES.md)).
+Phases are strictly sequential. Deploy cannot begin until Develop completes. Validate cannot begin until Deploy completes. This constraint is subject to revision based on real-world usage (see [SMAQIT](SMAQIT.md)).
 
 ## Phase Definitions
 
@@ -114,7 +114,7 @@ The deployment agent operates on credential references, never values. Actual dep
 └─────────────────────────────────────────────────────────────┘
 ```
 
-See [IMPLEMENTATIONS](IMPLEMENTATIONS.md) for the Isolation Principle.
+See [ARTIFACTS](ARTIFACTS.md) for the Isolation Principle.
 
 **Environment:** User-specified target (dev/staging/prod)
 
@@ -265,7 +265,7 @@ When retry threshold is exceeded:
 
 ## Current Assumptions
 
-These assumptions are explicitly stated and subject to revision per [PRINCIPLES](PRINCIPLES.md):
+These assumptions are explicitly stated and subject to revision per [SMAQIT](SMAQIT.md):
 
 | Assumption | Status | Revision Trigger |
 |------------|--------|------------------|
@@ -278,7 +278,7 @@ These assumptions are explicitly stated and subject to revision per [PRINCIPLES]
 ## See Also
 
 - [SMAQIT](SMAQIT.md) — Framework overview and principles
-- [AGENTS](AGENTS.md) — Agent definitions and behaviors
 - [LAYERS](LAYERS.md) — Layer definitions and dependencies
-- [SPECIFICATIONS](SPECIFICATIONS.md) — Specification artifacts
-- [IMPLEMENTATIONS](IMPLEMENTATIONS.md) — Implementation artifacts
+- [TEMPLATES](TEMPLATES.md) — Template structure rules
+- [AGENTS](AGENTS.md) — Agent behaviors
+- [ARTIFACTS](ARTIFACTS.md) — Artifact rules

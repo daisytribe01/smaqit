@@ -180,7 +180,7 @@ The Coverage layer ensures all upstream requirements are testable and traceable.
 ## See Also
 
 - [SMAQIT](SMAQIT.md) — Framework overview and principles
-- [AGENTS](AGENTS.md) — Agent definitions and behaviors
 - [PHASES](PHASES.md) — Phase workflows and transitions
-- [SPECIFICATIONS](SPECIFICATIONS.md) — Specification artifacts
-- [IMPLEMENTATIONS](IMPLEMENTATIONS.md) — Implementation artifacts
+- [TEMPLATES](TEMPLATES.md) — Template structure rules
+- [AGENTS](AGENTS.md) — Agent behaviors
+- [ARTIFACTS](ARTIFACTS.md) — Artifact rules
