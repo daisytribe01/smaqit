@@ -59,10 +59,12 @@ func cmdInit() {
 	//       └── coverage/
 	//
 	// TODO: Copy framework/ → .smaqit/framework/ (entire directory)
-	//   - SMAQIT.md, LAYERS.md, PHASES.md, AGENTS.md
-	//   - SPECIFICATIONS.md, IMPLEMENTATIONS.md
+	//   - SMAQIT.md, LAYERS.md, PHASES.md
+	//   - TEMPLATES.md, AGENTS.md, ARTIFACTS.md
 	//
-	// TODO: Copy templates/*.template.md → .smaqit/templates/
+	// TODO: Copy templates/ → .smaqit/templates/ (entire directory)
+	//   - specs/*.template.md
+	//   - agents/*.template.md
 	//
 	// TODO: Create .github/agents/ directory
 	// TODO: Copy agents/*.agent.md → .github/agents/
