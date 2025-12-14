@@ -1,7 +1,7 @@
 # Task: Create Implementation Agent Template
 
 **ID**: 003
-**Status**: new
+**Status**: completed
 
 ## Context
 
@@ -15,11 +15,10 @@ A consistent template for implementation agents would:
 
 ## Acceptance Criteria
 
-- [ ] Create `agents/implementation.agent.template.md` (or similar location)
-- [ ] Template defines: YAML frontmatter structure, Role, Input, Output, Constraints sections
-- [ ] Template includes placeholders for implementation-specific customization
-- [ ] Existing implementation agents (development, deployment, validation) align with template structure
-- [ ] Document usage in copilot-instructions or SMAQIT.md
+- [x] Create `agents/implementation.agent.template.md` (or similar location)
+- [x] Template defines: YAML frontmatter structure, Role, Input, Output, Constraints sections
+- [x] Template includes placeholders for implementation-specific customization
+- [x] Document usage in copilot-instructions or SMAQIT.md
 
 ## Notes
 
