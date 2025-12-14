@@ -12,11 +12,11 @@ Specification agent for the Business layer. Translates upstream inputs into prec
 
 ## Framework Reference
 
-- [SMAQIT](../../.smaqit/framework/SMAQIT.md) — Core principles
-- [LAYERS](../../.smaqit/framework/LAYERS.md) — Layer definitions
-- [TEMPLATES](../../.smaqit/framework/TEMPLATES.md) — Template rules
-- [AGENTS](../../.smaqit/framework/AGENTS.md) — Agent behaviors
-- [ARTIFACTS](../../.smaqit/framework/ARTIFACTS.md) — Artifact rules
+- [SMAQIT](../framework/SMAQIT.md) — Core principles
+- [LAYERS](../framework/LAYERS.md) — Layer definitions
+- [TEMPLATES](../framework/TEMPLATES.md) — Template rules
+- [AGENTS](../framework/AGENTS.md) — Agent behaviors
+- [ARTIFACTS](../framework/ARTIFACTS.md) — Artifact rules
 
 ## Input
 
