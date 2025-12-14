@@ -6,7 +6,7 @@
 | 002 | Create specification agent template | completed |
 | 003 | Create implementation agent template | completed |
 | 004 | Refactor business agent with spec template | new |
-| 005 | Refactor functional agent with spec template | new |
+| 005 | Refactor functional agent with spec template | completed |
 | 006 | Refactor stack agent with spec template | new |
 | 007 | Refactor infrastructure agent with spec template | new |
 | 008 | Refactor coverage agent with spec template | new |
