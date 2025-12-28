@@ -189,3 +189,12 @@ This prompt captures [LAYER] requirements for your project. These requirements w
 <!-- Example: "ASCII art renders correctly" -->
 <!-- Example: "Application exits with code 0" -->
 ```
+
+## Addendum
+
+Optional section for iterative refinements and amendments. Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Change Python to Go for better performance" -->
+<!-- Example: "[2025-12-28 15:45] Add support for emoji output in addition to ASCII art" -->

@@ -103,6 +103,35 @@ Agents guide users naturally, not with template references or error codes.
 
 When requirements change, users edit prompts and regenerate specs. Prompts are the source, specs are derived. Agents always read from `.github/prompts/`.
 
+### Iterative Refinement with Addendum
+
+When users iteratively refine specifications (e.g., "fix the stack spec", "change technology to Go"), agents capture these refinement instructions in the prompt's `## Addendum` section.
+
+**Addendum Principle:**
+
+Prompts are input records. All user instructions—original and iterative refinements—must be captured to maintain reproducibility. The Addendum section provides an append-only log of refinement instructions.
+
+**Agent Behavior:**
+
+When agents detect spec modification requests (e.g., user says "update the business spec to add X"), they:
+
+1. Apply the modification to the specification files
+2. Append the refinement instruction to the corresponding prompt file under `## Addendum`
+3. Use timestamp format: `[YYYY-MM-DD HH:MM] [user refinement instruction]`
+
+**Example:**
+
+```markdown
+## Addendum
+
+[2025-12-28 14:30] Change from Python to Go for better performance
+[2025-12-28 15:45] Add support for emoji output in addition to ASCII art
+```
+
+**Reproducibility:**
+
+Given the complete prompt (original requirements + addendum entries), regenerating specifications should produce equivalent behavioral outcomes, even if artifacts vary due to LLM non-determinism.
+
 ## Prompt Types
 
 ### Specification Prompts (Layer Prompts)

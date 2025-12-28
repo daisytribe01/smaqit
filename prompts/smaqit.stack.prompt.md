@@ -42,3 +42,12 @@ This prompt captures technology preferences and constraints for your project. Th
 [Why these technology choices?]
 
 <!-- Example: "Python for accessibility, standard library for simplicity" -->
+
+## Addendum
+
+Iterative refinements and amendments (auto-generated). Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Change from Python to Go for better performance" -->
+<!-- Example: "[2025-12-28 15:45] Add Docker support for containerized development" -->

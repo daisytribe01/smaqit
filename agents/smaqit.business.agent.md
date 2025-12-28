@@ -48,6 +48,7 @@ When prompt requirements conflict with upstream specs, flag the conflict rather 
 - Use requirement IDs: `BUS-[CONCEPT]-[NNN]` (see Requirement ID Format section below)
 - Request clarification when input is ambiguous
 - Validate output against completion criteria before finishing
+- **Detect spec modification requests**: When user requests modifications to existing specifications (e.g., "fix the business spec", "refine use case X"), append the refinement instruction to `.github/prompts/smaqit.business.prompt.md` under the `## Addendum` section with timestamp format: `[YYYY-MM-DD HH:MM] [user refinement instruction]`
 
 ### MUST NOT
 

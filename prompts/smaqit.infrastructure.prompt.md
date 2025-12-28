@@ -50,3 +50,12 @@ This prompt captures infrastructure and deployment requirements for your project
 [What existing systems need to connect?]
 
 <!-- Example: "None - standalone application" -->
+
+## Addendum
+
+Iterative refinements and amendments (auto-generated). Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Move from local execution to AWS Lambda" -->
+<!-- Example: "[2025-12-28 15:45] Add CloudWatch logging for production monitoring" -->

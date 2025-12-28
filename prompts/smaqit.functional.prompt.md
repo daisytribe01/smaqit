@@ -42,3 +42,12 @@ This prompt captures functional requirements for your project. These requirement
 [What interfaces exist between components?]
 
 <!-- Example: "GreetingService.getGreeting() → String" -->
+
+## Addendum
+
+Iterative refinements and amendments (auto-generated). Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Add error handling behavior for invalid input" -->
+<!-- Example: "[2025-12-28 15:45] Change API contract to async/await pattern" -->

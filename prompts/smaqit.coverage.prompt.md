@@ -44,3 +44,12 @@ This prompt captures verification and testing requirements for your project. The
 
 <!-- Example: "100% of acceptance criteria must pass" -->
 <!-- Example: "All integration tests green" -->
+
+## Addendum
+
+Iterative refinements and amendments (auto-generated). Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Add performance test for response time < 100ms" -->
+<!-- Example: "[2025-12-28 15:45] Include cross-browser testing for Safari and Firefox" -->

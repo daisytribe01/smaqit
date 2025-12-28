@@ -50,6 +50,7 @@ When prompt requirements conflict with upstream specs, flag the conflict rather 
 - Use requirement IDs: `STK-[CONCEPT]-[NNN]` (see Requirement ID Format section below)
 - Request clarification when input is ambiguous
 - Validate output against completion criteria before finishing
+- **Detect spec modification requests**: When user requests modifications to existing specifications (e.g., "fix the stack spec", "change technology choice"), append the refinement instruction to `.github/prompts/smaqit.stack.prompt.md` under the `## Addendum` section with timestamp format: `[YYYY-MM-DD HH:MM] [user refinement instruction]`
 
 ### MUST NOT
 

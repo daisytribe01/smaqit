@@ -38,3 +38,12 @@ This prompt captures business requirements for your project. These requirements 
 
 <!-- Example: "Must use only official Mario dialogue" -->
 <!-- Example: "Budget: $0 (open source project)" -->
+
+## Addendum
+
+Iterative refinements and amendments (auto-generated). Agents append refinement instructions here when users request modifications to existing specifications.
+
+Format: `[YYYY-MM-DD HH:MM] [refinement instruction]`
+
+<!-- Example: "[2025-12-28 14:30] Change target audience from children to all ages" -->
+<!-- Example: "[2025-12-28 15:45] Add accessibility requirement for screen readers" -->
