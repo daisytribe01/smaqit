@@ -1,6 +1,6 @@
 # Task 051: Fix Validation Agent CLI Directive
 
-**Status:** new  
+**Status:** completed  
 **Priority:** High (Release Blocker)  
 **Created:** 2026-01-05  
 **Related:** Task 048 (E2E Testing), Issue 6

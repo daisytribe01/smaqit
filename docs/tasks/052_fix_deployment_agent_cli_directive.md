@@ -1,6 +1,6 @@
 # Task 052: Fix Deployment Agent CLI Directive (Preventive)
 
-**Status:** new  
+**Status:** completed  
 **Priority:** High  
 **Created:** 2026-01-05  
 **Related:** Task 048 (E2E Testing), Tasks 049, 051
@@ -24,12 +24,70 @@ Preventively update Deployment agent directive to mandate explicit CLI command e
 
 ## Acceptance Criteria
 
-- [ ] Verified current `agents/smaqit.deployment.agent.md` directive phrasing
-- [ ] Updated directive from instructional to imperative (if needed)
-- [ ] Added output requirement that deployment report MUST document CLI command execution
-- [ ] Agent directive explicitly states command must be "first action"
-- [ ] Agent directive specifies "process ONLY the specs returned" by CLI
-- [ ] Verified directive change with test execution (optional)
+- [x] Verified current `agents/smaqit.deployment.agent.md` directive phrasing
+- [x] Updated directive from instructional to imperative (if needed)
+- [x] Added output requirement that deployment report MUST document CLI command execution
+- [x] Agent directive explicitly states command must be "first action"
+- [x] Agent directive specifies "process ONLY the specs returned" by CLI
+- [x] Verified directive change with test execution (optional)
+- [x] Extended fix to Development and Validation agents (tasks 049, 051)
+- [x] Updated implementation agent template for consistency
+
+## Implementation Summary
+
+**Date:** 2026-01-05
+
+### Changes Made
+
+This task established the pattern that ALL implementation agents MUST execute `smaqit plan --phase=[PHASE]` as first action. Fixed all three implementation agents (Development, Deployment, Validation) and the implementation agent template.
+
+**Files Modified:**
+
+1. **agents/smaqit.deployment.agent.md**
+   - Line 52: Changed "Determine which specs to process using" → "Execute ... as the first action and process ONLY the specs returned"
+   - Line 45: Added output requirement to document CLI command execution
+
+2. **agents/smaqit.development.agent.md**
+   - Line 50: Changed "Determine which specs to process using" → "Execute ... as the first action and process ONLY the specs returned"
+   - Line 44: Added output requirement to document CLI command execution
+
+3. **agents/smaqit.validation.agent.md**
+   - Line 48: Changed "Determine which specs to process using" → "Execute ... as the first action and process ONLY the specs returned"
+   - Line 40: Added output requirement to document CLI command execution
+
+4. **templates/agents/implementation-agent.template.md**
+   - Line 42: Updated placeholder directive to imperative phrasing
+   - Line 37: Added placeholder for CLI command documentation requirement
+
+### Pattern Established
+
+**Before (instructional, weak):**
+```
+- Determine which specs to process using `smaqit plan --phase=[PHASE]`
+```
+
+**After (imperative, strong):**
+```
+- Execute `smaqit plan --phase=[PHASE]` as the first action and process ONLY the specs returned
+```
+
+**Output requirement added:**
+```
+- [Phase] report MUST document the output of `smaqit plan --phase=[PHASE]` command
+```
+
+### Validation
+
+- ✅ Installer builds successfully
+- ✅ Installation test in clean directory passed
+- ✅ All three implementation agents have consistent directives
+- ✅ Installed agents contain updated directives
+- ✅ Template updated to prevent future regression
+
+### Notes
+
+This task completed the pattern consistency work across all implementation agents. Tasks 049 and 051 were also resolved by this implementation since they had the same root cause. The CLI is now the authoritative source of truth for determining which specs require processing.
+
 
 ## Implementation Plan
 

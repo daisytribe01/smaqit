@@ -1,6 +1,6 @@
 # Task 049: Fix Development Agent CLI Directive
 
-**Status:** new  
+**Status:** completed  
 **Priority:** High (Release Blocker)  
 **Created:** 2026-01-05  
 **Related:** Task 048 (E2E Testing), Issue 4

@@ -4,10 +4,7 @@
 
 | ID | Title | Status | Priority |
 |----|-------|--------|----------|
-| 049 | Fix Development Agent CLI Directive | new | High (Blocker) |
 | 050 | Redesign Coverage Prompt | new | High (Blocker) |
-| 051 | Fix Validation Agent CLI Directive | new | High (Blocker) |
-| 052 | Fix Deployment Agent CLI Directive (Preventive) | new | High |
 | 053 | Fix Validation Frontmatter Updates | new | High (Blocker) |
 | 054 | Strengthen Stack Agent Code Directive | new | Medium |
 | 055 | Formalize Single Source of Truth Principle | new | Medium |
@@ -22,6 +19,9 @@
 
 | ID | Title |
 |----|-------|
+| 049 | Fix Development Agent CLI Directive |
+| 051 | Fix Validation Agent CLI Directive |
+| 052 | Fix Deployment Agent CLI Directive (Preventive) |
 | 001 | Create Copilot prompt files |
 | 002 | Create specification agent template |
 | 003 | Create implementation agent template |
