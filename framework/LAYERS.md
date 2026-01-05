@@ -181,9 +181,9 @@ The Coverage layer ensures all requirements are testable and traceable. It reads
 
 **Purpose:** Enumerate every acceptance criterion and map it to a verification test.
 
-**Input:** User verification requirements (test scope, performance benchmarks, security requirements)
+**Input:** User verification preferences (test environment, tooling, acceptance thresholds)
 
-**Context:** All layer specs (Business, Functional, Stack, Infrastructure)
+**Context:** All layer specs (Business, Functional, Stack, Infrastructure) — source of all requirements
 
 **Directives:**
 

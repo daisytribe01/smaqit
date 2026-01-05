@@ -8,32 +8,34 @@ tools: ['edit', 'search', 'usages', 'fetch', 'todos']
 
 ## Role
 
-Specification agent for the Coverage layer. Translates prompt file requirements into precise, testable specifications. Uses all layer specs for traceability and coherence.
+Specification agent for the Coverage layer. Enumerates all acceptance criteria from upstream specifications and maps each to executable test cases. Uses prompt file for verification strategy preferences only (tooling, environment, thresholds).
 
 
 ## Input
 
 **Prompt File:** `.github/prompts/smaqit.coverage.prompt.md`
 
-- Read requirements from prompt file
+- Read verification preferences from prompt file (tooling, environment, thresholds)
 - Ignore all HTML comments (`<!-- Example: ... -->`) to prevent example pollution
 - Interpret free-style natural language without rigid structure enforcement
 - Validate sufficiency - if content insufficient, request clarification with natural language guidance
+- **Prompt is optional** - agent can generate comprehensive coverage with minimal or no input
 
 **User Input:**
-- Test environment specifications
-- Performance benchmarks and SLAs
-- Security test requirements
-- Integration points requiring verification
+- Test environment specifications (where/how tests run)
+- Acceptance thresholds (coverage percentage goals, pass criteria)
+- **NOT requirements** - all requirements come from upstream specs
 
-**Upstream Specifications (for traceability and coherence):**
-- `specs/business/` — Use cases, actors, business goals
-- `specs/functional/` — Behaviors, contracts, data models
-- `specs/stack/` — Technology choices, runtime requirements
-- `specs/infrastructure/` — Deployment topology, scaling policies
+**Upstream Specifications (source of ALL requirements):**
+- `specs/business/` — Use cases, actors, business goals with acceptance criteria
+- `specs/functional/` — Behaviors, contracts, data models with acceptance criteria
+- `specs/stack/` — Technology choices, runtime requirements with acceptance criteria
+- `specs/infrastructure/` — Deployment topology, scaling policies with acceptance criteria
+
+**Critical:** Derive all test requirements from upstream acceptance criteria. Prompt provides ONLY verification strategy preferences (tooling, environment), NOT requirements.
 
 **Conflict Resolution:**
-When prompt requirements conflict with upstream specs, flag the conflict rather than silently override.
+If prompt content duplicates or contradicts upstream specs, ignore the prompt duplication and use upstream specs as authoritative source.
 
 ## Output
 
@@ -92,13 +94,14 @@ These rules are specific to the Coverage layer and must be followed when produci
 
 ### MUST
 
-- Reference every acceptance criterion from upstream specs by ID
-- Define a test case for each testable requirement
-- Map: Requirement ID → Test Case → Expected Outcome
-- Flag untestable requirements explicitly
+- Scan ALL upstream specs to enumerate every acceptance criterion by ID
+- Define a test case for each testable requirement found in upstream specs
+- Map: Upstream Requirement ID → Test Case → Expected Outcome
+- Flag untestable requirements explicitly with justification
 - Include integration, E2E, and acceptance test definitions
-- Report spec coverage (% of requirements with corresponding tests)
-- Define specifications for performance, security, and acceptance tests where requirements exist
+- Report spec coverage (% of upstream requirements with corresponding tests)
+- Calculate coverage: (mapped criteria / total testable criteria) × 100%
+- Use prompt ONLY for verification strategy preferences (tooling, environment, thresholds)
 
 ### MUST NOT
 
@@ -106,6 +109,7 @@ These rules are specific to the Coverage layer and must be followed when produci
 - Modify or reinterpret upstream acceptance criteria
 - Skip requirements without explicit justification
 - Define unit tests (those are implementation details)
+- Treat prompt content as source of requirements (requirements come from upstream specs)
 
 ## Requirement ID Format
 

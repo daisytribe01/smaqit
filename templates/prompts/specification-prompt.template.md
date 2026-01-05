@@ -154,38 +154,21 @@ This prompt captures [LAYER] requirements for your project. These requirements w
 ### Coverage Layer
 
 ```markdown
-## Requirements
-
-### Test Scope
-[What should be tested?]
-
-<!-- Example: "Verify Mario-themed elements appear correctly in output" -->
-
-### Performance Benchmarks
-[Any performance requirements?]
-
-<!-- Example: "Application starts in < 1 second" -->
-<!-- Example: "Total execution time < 2 seconds" -->
-
-### Security Requirements
-[Any security concerns?]
-
-<!-- Example: "No security concerns (local, non-networked application)" -->
+## Verification Preferences
 
 ### Test Environment
-[Where will tests run?]
+[Where and how should tests run?]
 
-<!-- Example: "Local terminal with color support, multiple OS platforms" -->
+<!-- Example: "GitHub Actions on push to main branch" -->
+<!-- Example: "Local test suite with pytest" -->
+<!-- Example: "Docker container with Node 20 runtime" -->
 
-### Integration Points
-[What external systems need testing?]
+### Acceptance Thresholds
+[What defines acceptable test coverage and results?]
 
-<!-- Example: "None (standalone application)" -->
-
-### Verification Requirements
-[What must be verified?]
-
-<!-- Example: "Mario catchphrase appears in output" -->
-<!-- Example: "ASCII art renders correctly" -->
-<!-- Example: "Application exits with code 0" -->
+<!-- Example: "100% of testable acceptance criteria must have test cases" -->
+<!-- Example: "All integration tests must pass before deployment" -->
+<!-- Example: "Performance tests within 10% of baseline" -->
 ```
+
+**Note:** Coverage prompt is optional. The agent derives all test requirements from upstream specs (Business, Functional, Stack, Infrastructure). This prompt specifies ONLY verification strategy preferences (tooling, environment, thresholds), NOT requirements.
