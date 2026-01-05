@@ -1,6 +1,6 @@
 # Task 050: Redesign Coverage Prompt
 
-**Status:** new  
+**Status:** Completed (2026-01-05)  
 **Priority:** High (Release Blocker)  
 **Created:** 2026-01-05  
 **Related:** Task 048 (E2E Testing), Issue 5
@@ -31,15 +31,18 @@ Redesign Coverage prompt to focus ONLY on verification preferences (test environ
 
 ## Acceptance Criteria
 
-- [ ] Removed "Performance Benchmarks" section (requirements should be in Business/Infrastructure specs)
-- [ ] Removed "Security Requirements" section (requirements should be in Functional/Infrastructure specs)
-- [ ] Removed "Integration Points" section (requirements should be in upstream specs)
-- [ ] Kept "Test Environment" section (tooling/platform preferences)
-- [ ] Kept "Acceptance Thresholds" section (coverage percentage goals)
-- [ ] Updated prompt description to clarify Coverage derives verification strategy from upstream specs
-- [ ] Added guidance that prompt is optional—agent can work with minimal or empty input
-- [ ] Updated `agents/smaqit.coverage.agent.md` to emphasize deriving from upstream specs
-- [ ] Updated `framework/LAYERS.md` Coverage section to clarify prompt provides preferences, not requirements
+- [x] Removed "Performance Benchmarks" section (requirements should be in Business/Infrastructure specs)
+- [x] Removed "Security Requirements" section (requirements should be in Functional/Infrastructure specs)
+- [x] Removed "Integration Points" section (requirements should be in upstream specs)
+- [x] Removed "Test Scope" section (derives from upstream specs)
+- [x] Removed "Verification Requirements" section (derives from upstream specs)
+- [x] Kept "Test Environment" section (tooling/platform preferences)
+- [x] Kept "Acceptance Thresholds" section (coverage percentage goals)
+- [x] Updated prompt description to clarify Coverage derives verification strategy from upstream specs
+- [x] Added guidance that prompt is optional—agent can work with minimal or empty input
+- [x] Updated `agents/smaqit.coverage.agent.md` to emphasize deriving from upstream specs
+- [x] Updated `framework/LAYERS.md` Coverage section to clarify prompt provides preferences, not requirements
+- [x] Updated `templates/prompts/specification-prompt.template.md` to align with new structure
 
 ## Implementation Plan
 
@@ -95,6 +98,55 @@ None (can be implemented independently)
 ## Related Tasks
 
 - Task 048: E2E Agent Workflow Testing (discovered this issue)
+
+## Completion Summary
+
+**Completed:** 2026-01-05
+
+**Changes Made:**
+
+1. **Framework (Level 0):** `framework/LAYERS.md`
+   - Changed Input: "verification requirements" → "verification preferences (test environment, tooling, acceptance thresholds)"
+   - Clarified Context: Added "— source of all requirements"
+
+2. **Prompts (Level 2 Source):** `prompts/smaqit.coverage.prompt.md`
+   - Removed 5 sections: Performance Benchmarks, Security Requirements, Test Scope, Integration Points, Verification Requirements
+   - Kept 2 sections: Test Environment, Acceptance Thresholds
+   - Changed header: "Requirements" → "Verification Preferences"
+   - Added note: "This prompt is optional. The agent can generate comprehensive coverage specs with minimal or no input"
+   - Updated description to clarify agent derives requirements from upstream specs
+
+3. **Agent (Level 2):** `agents/smaqit.coverage.agent.md`
+   - Updated Role: "Enumerates all acceptance criteria from upstream specifications and maps each to executable test cases"
+   - Enhanced Input section: Clarified prompt is optional, for preferences NOT requirements
+   - Added "Critical" guidance: "Derive all test requirements from upstream acceptance criteria"
+   - Updated Conflict Resolution: Ignore prompt duplications, use upstream as authoritative
+   - Strengthened MUST directives: Scan ALL upstream specs, calculate coverage percentage
+   - Added MUST NOT: Treat prompt as source of requirements
+
+4. **Template (Level 1):** `templates/prompts/specification-prompt.template.md`
+   - Updated Coverage section to match new structure (2 sections instead of 7)
+   - Added note about optional nature and preference-only purpose
+
+**Files Modified:** 4
+- `framework/LAYERS.md` - 2 lines
+- `prompts/smaqit.coverage.prompt.md` - Removed 5 sections (37 lines → 27 lines)
+- `agents/smaqit.coverage.agent.md` - Enhanced directives (40 lines changed)
+- `templates/prompts/specification-prompt.template.md` - Simplified Coverage section (41 lines → 22 lines)
+
+**Net Change:** -32 lines (simplified from requirement-adding to preference-only)
+
+**Testing:**
+- ✅ Installer builds successfully
+- ✅ `smaqit init` installs updated prompt correctly
+- ✅ No requirement sections remain in modified files
+- ✅ All levels (0, 1, 2) are consistent
+
+**Impact:**
+- Coverage prompt now aligns with framework principle: pure traceability mapping
+- Users no longer duplicate requirements in Coverage prompt
+- Agent clearly derives all requirements from upstream acceptance criteria
+- Prompt provides ONLY verification strategy (tooling, environment, thresholds)
 
 ## Notes
 
