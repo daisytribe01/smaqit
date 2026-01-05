@@ -1,9 +1,10 @@
 # Task 052: Fix Deployment Agent CLI Directive (Preventive)
 
-**Status:** new  
+**Status:** Completed (by Task 049)  
 **Priority:** High  
 **Created:** 2026-01-05  
-**Related:** Task 048 (E2E Testing), Tasks 049, 051
+**Completed:** 2026-01-05 (as part of Task 049)  
+**Related:** Task 048 (E2E Testing), Task 049, Task 051
 
 ## Problem
 
@@ -17,6 +18,12 @@ Deployment agent likely has same weak directive phrasing as Development (Task 04
 - Deployment agent risks deploying wrong specs or missing failed/draft specs
 - Undermines CLI as single source of truth for spec state
 - Same violations as Issues 4 and 6
+
+## Resolution
+
+**Completed as part of Task 049.**
+
+Task 049 applied the fix to all three implementation agents (Development, Deployment, Validation) for consistency, addressing this preventive task. See Task 049 implementation details for complete documentation.
 
 ## Objective
 

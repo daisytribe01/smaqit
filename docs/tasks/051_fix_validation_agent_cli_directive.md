@@ -1,9 +1,10 @@
 # Task 051: Fix Validation Agent CLI Directive
 
-**Status:** new  
+**Status:** Completed (by Task 049)  
 **Priority:** High (Release Blocker)  
 **Created:** 2026-01-05  
-**Related:** Task 048 (E2E Testing), Issue 6
+**Completed:** 2026-01-05 (as part of Task 049)  
+**Related:** Task 048 (E2E Testing), Task 049, Issue 6
 
 ## Problem
 
@@ -17,6 +18,12 @@ Validation agent processed validation without executing `smaqit plan --phase=val
 - Same violations as Issue 4 (Development agent)
 - Validation agent risks validating wrong specs or missing failed/draft specs
 - Undermines CLI as single source of truth for spec state
+
+## Resolution
+
+**Completed as part of Task 049.**
+
+Task 049 applied the fix to all three implementation agents (Development, Deployment, Validation) for consistency, addressing this task preventively. See Task 049 implementation details for complete documentation.
 
 ## Objective
 
