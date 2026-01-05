@@ -12,7 +12,6 @@
 | 054 | Strengthen Stack Agent Code Directive | new | Medium |
 | 055 | Formalize Single Source of Truth Principle | new | Medium |
 | 056 | Document Context Pollution Workaround | new | Low |
-| 057 | Add Checkbox Updates to Validation Agent | new | Low |
 | 025 | Integrate testing agent with CI/CD | new | Medium |
 | 031 | Review implementation artifacts | new | Medium |
 | 036 | Implement prompt addendum for reproducibility | new | Medium |
@@ -66,6 +65,7 @@
 | 046 | Document iterative development quick start |
 | 047 | Implement incremental processing in implementation agents |
 | 045 | Validate stateful specifications infrastructure |
+| 057 | Add checkbox updates to validation agent |
 
 ## Backlog
 

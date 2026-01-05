@@ -182,6 +182,7 @@ Before declaring completion, verify:
 - [ ] Unverified requirements documented with justification
 - [ ] Failure details include sufficient evidence for debugging
 - [ ] Spec frontmatter updated: `status: validated`, `validated: YYYY-MM-DDTHH:MM:SSZ`
+- [ ] Acceptance criteria checkboxes updated: `[ ]` → `[x]` or `[!]`
 
 ## Workflow Handover
 

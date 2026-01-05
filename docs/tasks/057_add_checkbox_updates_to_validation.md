@@ -1,8 +1,9 @@
 # Task 057: Add Checkbox Updates to Validation Agent
 
-**Status:** new  
+**Status:** completed  
 **Priority:** Low  
 **Created:** 2026-01-05  
+**Completed:** 2026-01-05  
 **Related:** Task 048 (E2E Testing), Issue 8
 
 ## Problem
@@ -169,3 +170,33 @@ cat specs/business/uc1-greeting.md
 **Recommendation rationale:** Option C (CLI command) provides automation without agent complexity. User controls when to update (after reviewing report). Aligns with smaqit principle of CLI as primary interface for project state management.
 
 **v0.5.0 decision:** Implement Option B (documentation) for immediate release. Schedule Option C (CLI command) for v0.6.0 as enhancement.
+
+## Resolution (2026-01-05)
+
+**Actual Solution: Option A (Strengthen Existing Directive)**
+
+After critical assessment, discovered that:
+1. **Framework Level 0 already documents checkbox updates** (PHASES.md, ARTIFACTS.md, AGENTS.md) ✅
+2. **Validation agent already has checkbox update directive** in State Tracking section (lines 101-107) ✅
+3. **Missing:** Checkbox update verification was NOT in Completion Criteria self-validation checklist ❌
+
+**Root Cause:** Per framework principle "Self-Validating Agents," agents check completion criteria before declaring done. Since checkbox updates weren't in the checklist, agents skipped this step even though the directive existed.
+
+**Fix Applied:** Added one line to Validation agent completion criteria:
+```
+- [ ] Acceptance criteria checkboxes updated: `[ ]` → `[x]` or `[!]`
+```
+
+**Why this is better than Options B or C:**
+- **Simpler:** One-line addition vs documentation workaround or CLI development
+- **Level-appropriate:** Level 2 fix (agent file) respecting smaqit levels
+- **Minimal:** No framework changes needed (already compliant at Level 0)
+- **Effective:** Makes existing directive enforceable through self-validation
+
+**Files Modified:**
+- `agents/smaqit.validation.agent.md` (1 line added to completion criteria)
+
+**Testing:**
+- Verified installer builds successfully
+- Verified `smaqit init` creates proper structure with updated agent
+- Verified checkbox update line present in installed agent file
