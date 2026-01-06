@@ -8,8 +8,6 @@ agent: smaqit.coverage
 
 This prompt captures verification strategy preferences for your project. The Coverage agent derives test requirements automatically from all upstream specifications (Business, Functional, Stack, Infrastructure).
 
-**Note:** This prompt is optional. The agent can generate comprehensive coverage specs with minimal or no input, as all requirements already exist in upstream specs. Use this prompt to specify verification tooling and environment preferences, not requirements.
-
 ## Verification Preferences
 
 ### Test Environment

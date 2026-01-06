@@ -170,5 +170,3 @@ This prompt captures [LAYER] requirements for your project. These requirements w
 <!-- Example: "All integration tests must pass before deployment" -->
 <!-- Example: "Performance tests within 10% of baseline" -->
 ```
-
-**Note:** Coverage prompt is optional. The agent derives all test requirements from upstream specs (Business, Functional, Stack, Infrastructure). This prompt specifies ONLY verification strategy preferences (tooling, environment, thresholds), NOT requirements.
