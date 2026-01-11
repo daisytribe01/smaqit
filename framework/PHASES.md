@@ -168,7 +168,7 @@ See [ARTIFACTS](ARTIFACTS.md) for the Isolation Principle.
 - [ ] Health checks pass
 - [ ] System accessible at expected endpoints
 - [ ] Deployment report written to `.smaqit/reports/deployment-phase-report-YYYY-MM-DD.md`
-- [ ] Spec frontmatter updated: `status: deployed`, `deployed: [ISO8601_TIMESTAMP]`
+- [ ] All referenced spec frontmatter updated: `status: deployed`, `deployed: [ISO8601_TIMESTAMP]` (Business, Functional, Stack, Infrastructure)
 - [ ] Acceptance criteria checkboxes updated in Infrastructure specs: `[ ]` → `[x]` or `[!]`
 
 ---
@@ -232,7 +232,7 @@ If prompt has content, agents interpret free-style requirements and request clar
 - [ ] Validation report written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`
 - [ ] Spec coverage percentage calculated
 - [ ] Untestable criteria documented with justification
-- [ ] Spec frontmatter updated: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
+- [ ] All referenced spec frontmatter updated: `status: validated`, `validated: [ISO8601_TIMESTAMP]` (Business, Functional, Stack, Infrastructure, Coverage)
 
 ---
 
