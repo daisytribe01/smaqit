@@ -13,7 +13,7 @@ Prompts are the user-facing interface for smaqit workflows. They capture require
 
 - YAML frontmatter: `name`, `description`, `agent`
 - Requirement sections with layer-specific sub-sections
-- `<!-- Example: ... -->` comments for guidance (agents MUST ignore these)
+- `<!-- Example: ... -->` comments for guidance (agents ignore these)
 - Free-style user content in natural language
 
 **Prompt types:**
@@ -71,7 +71,7 @@ Prompts are **natural language inputs**, not rigidly structured forms. Templates
 
 ### Comment Convention for Examples
 
-**Agents MUST ignore HTML comments** (`<!-- -->`). Templates include examples wrapped in `<!-- Example: ... -->` comments for user guidance only.
+Agents ignore HTML comments (`<!-- -->`). Templates include examples wrapped in `<!-- Example: ... -->` comments for user guidance only.
 
 ## Agent Interaction
 
@@ -138,4 +138,3 @@ Coordinates full workflow from specifications through validation:
 | `smaqit.orchestrate.prompt.md` | Phase selection, pre-validation preferences, error handling | Orchestrator Agent |
 
 Orchestrator prompt collects execution parameters (which phases to run, validation preferences, error handling strategy). Orchestrator agent executes the workflow logic.
-

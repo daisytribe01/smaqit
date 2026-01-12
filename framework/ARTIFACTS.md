@@ -1,6 +1,6 @@
 # Artifacts
 
-Artifacts are the outputs produced by agents. This document establishes the rules all artifacts MUST follow.
+Artifacts are the outputs produced by agents. This document captures the principles that guide those artifacts.
 
 There are two types of artifacts:
 - **Specification artifacts** — Declarative documents stating what must be true
@@ -10,13 +10,11 @@ There are two types of artifacts:
 
 ## Specification Artifacts
 
-Specifications are the source of truth in Spec Driven Development. They serve as contracts between layers.
-
-A specification is complete when another agent (or human) can implement or validate against it without requiring additional context.
+Specifications are the source of truth in Spec Driven Development and act as contracts between layers. They feel complete when another agent (or human) can implement or validate against them without seeking extra context.
 
 ### Requirement Identifiers
 
-Every acceptance criterion MUST have a unique identifier for traceability.
+Every acceptance criterion carries a unique identifier for traceability.
 
 **Format:**
 ```
@@ -40,14 +38,13 @@ Every acceptance criterion MUST have a unique identifier for traceability.
 | Coverage | `COV-[CONCEPT]-001` | Test case for [upstream requirement ID] |
 
 **Rules:**
-- IDs MUST be unique within the project
-- IDs MUST NOT be reused after deletion (mark as deprecated instead)
-- IDs MUST remain stable—never rename an ID, only deprecate and create new
-- Related criteria SHOULD share the same `CONCEPT` segment
+- IDs stay unique within the project
+- Retired IDs are deprecated rather than reused or renamed
+- Related criteria often share the same `CONCEPT` segment
 
 ### Acceptance Criteria
 
-Acceptance criteria define testable conditions that must be satisfied.
+Acceptance criteria define testable conditions to satisfy a requirement.
 
 **Format:**
 ```markdown
@@ -57,9 +54,9 @@ Acceptance criteria define testable conditions that must be satisfied.
 - [ ] [ID]: [Criterion statement]
 ```
 
-**Testability Requirements:**
+**Testability Traits:**
 
-Every criterion MUST be:
+Every criterion is:
 
 | Property | Definition | Good Example | Bad Example |
 |----------|------------|--------------|-------------|
@@ -69,7 +66,7 @@ Every criterion MUST be:
 
 **Untestable Criteria:**
 
-Some requirements cannot be automatically validated. These MUST be flagged:
+Some requirements cannot be automatically validated and should be flagged:
 
 ```markdown
 - [ ] BUS-UX-002: Dashboard feels modern and engaging *(untestable)*
@@ -78,20 +75,17 @@ Some requirements cannot be automatically validated. These MUST be flagged:
   - **Resolution**: Defer to manual UX review; exclude from automated coverage
 ```
 
-Untestable criteria:
-- MUST be flagged with `*(untestable)*` marker
-- MUST include a proposal for measurable alternatives or resolution
-- MUST NOT block spec completion
+Untestable criteria carry a marker, propose measurable alternatives or resolutions, and do not block specification progress.
 
 ### Traceability
 
-Specifications MUST reference their sources explicitly.
+Specifications reference their sources explicitly.
 
 **Reference Types:**
 
 | Type | Meaning | Use Case |
 |------|---------|----------|
-| **Prompt File** | Layer-specific prompt (`.github/prompts/smaqit.[layer].prompt.md`) | Primary source for layer requirements |
+| **Prompt File** | Layer-specific prompt | Primary source for layer requirements |
 | **Context** | Adjacent layer spec used for coherence | Ensures cross-layer coherence |
 
 **Cross-Layer Traceability:**
@@ -168,9 +162,8 @@ When a foundation spec precedes Business specs or serves anticipated needs:
 Orphaned foundations (no references, no justification) should be flagged by Coverage.
 
 **Rules:**
-- Every spec (except Business) MUST have a References section
-- References MUST use relative paths within `specs/`
-- References provide context for coherence, not requirements
+- Every spec (except Business) names its references
+- References focus on coherence rather than creating new requirements
 - Implementation agents validate cross-layer coherence
 
 **Traceability Matrix:**
@@ -203,9 +196,9 @@ Feature: [Feature Name]
 ```
 
 **Coverage Rules:**
-- Each testable criterion MUST map to at least one test case
-- Coverage IDs MUST reference their source requirement ID
-- Untestable criteria MUST be listed with justification for exclusion
+- Each testable criterion maps to at least one test case
+- Coverage IDs reference their source requirement ID
+- Untestable criteria appear with justification for exclusion
 - Spec coverage % = (tested criteria / total testable criteria) × 100
 
 ### File Organization
@@ -325,11 +318,11 @@ Implementations are the imperative outputs produced by implementation agents. Th
 
 ### The Anchoring Principle
 
-> "Implementations MUST comply with industry standards for their stack, while satisfying spec-defined behavior. Two compliant implementations may differ internally, but MUST be structurally recognizable and behaviorally equivalent."
+Implementations align with industry standards for their stack while satisfying spec-defined behavior. Two compliant implementations may differ internally, yet remain structurally recognizable and behaviorally equivalent.
 
 ### The Isolation Principle
 
-> "Agents operate on references, never values. Secrets and credentials MUST remain outside the agent's context at all times—resolution happens in a trusted execution layer that returns only outcomes, never the sensitive data itself."
+Agents operate on references, never values. Secrets and credentials stay outside the agent context; trusted execution resolves them and returns outcomes without exposing sensitive data.
 
 ### Three Dimensions
 
@@ -338,10 +331,10 @@ Every implementation exists across three dimensions:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ BEHAVIOR (from Specs)                                       │
-│ Invariant — MUST be identical across implementations        │
+│ Invariant — identical across implementations                │
 ├─────────────────────────────────────────────────────────────┤
 │ STRUCTURE (from Industry Standards)                         │
-│ Consistent — SHOULD follow stack-specific best practices    │
+│ Consistent — aligned with stack-specific best practices     │
 ├─────────────────────────────────────────────────────────────┤
 │ INTERNALS (Implementation Freedom)                          │
 │ Variable — MAY differ, no two implementations identical     │
@@ -349,12 +342,10 @@ Every implementation exists across three dimensions:
 ```
 
 **Behavior (Invariant):**
-- Defined by specifications, MUST be satisfied exactly
-- No deviation permitted—behavior is the contract
+- Defined by specifications and satisfied exactly; behavior is the contract
 
 **Structure (Consistent):**
-- Follows industry standards for the chosen stack
-- Implementations SHOULD be recognizable to practitioners
+- Follows industry standards for the chosen stack and remains recognizable to practitioners
 
 **Internals (Variable):**
 - Variable names, helper functions, internal patterns
@@ -362,7 +353,7 @@ Every implementation exists across three dimensions:
 
 ### Traceability
 
-Implementation code SHOULD include references to specifications:
+Implementation code includes references to specifications where meaningful:
 
 ```csharp
 /// <summary>
@@ -372,42 +363,40 @@ Implementation code SHOULD include references to specifications:
 public async Task<Result> MethodName(Request request)
 ```
 
-**Rules:**
-- Major components SHOULD reference the spec requirements they implement
-- Traceability MUST be verifiable during validation phase
+**Principles:**
+- Major components point back to the requirements they implement
+- Traceability remains verifiable during validation
 
 ### Validation Requirements
 
 | Dimension | Verifiable? | How |
 |-----------|-------------|-----|
-| Behavior | MUST | Automated tests from Coverage specs |
-| Structure | SHOULD | Static analysis, architectural tests |
-| Internals | NOT REQUIRED | — |
+| Behavior | Expected | Automated tests from Coverage specs |
+| Structure | Expected | Static analysis, architectural tests |
+| Internals | Informational | — |
 
 ### Implementation Artifacts by Phase
 
 **Develop Phase:**
 - Source code, tests, configurations, build files
 - README with build, test, and run instructions
-- Development report in `.smaqit/reports/development-phase-report-YYYY-MM-DD.md` (build/test/run results)
-- Spec frontmatter: `status: implemented`, `implemented: [ISO8601_TIMESTAMP]`
-- Acceptance criteria checkboxes updated in Business, Functional, Stack specs: `[ ]` → `[x]` or `[!]`
-- MUST satisfy all spec acceptance criteria
-- MUST follow stack-specific standards
+- Development reporting that captures build, test, and run results
+- Spec frontmatter reflecting implemented state
+- Acceptance criteria checkboxes updated in Business, Functional, and Stack specs
+- Work aligned with spec acceptance criteria and stack standards
 
 **Deploy Phase → Infrastructure:**
 - Infrastructure code (Terraform, etc.)
 - Deployment manifests, environment configs
-- Deployment report in `.smaqit/reports/deployment-phase-report-YYYY-MM-DD.md` with health status and endpoints
-- Spec frontmatter: `status: deployed`, `deployed: [ISO8601_TIMESTAMP]`
-- Acceptance criteria checkboxes updated in Infrastructure specs: `[ ]` → `[x]` or `[!]`
-- MUST NOT hardcode secrets (Isolation Principle)
+- Deployment reporting with health status and endpoints
+- Spec frontmatter reflecting deployed state
+- Acceptance criteria checkboxes updated in Infrastructure specs
+- Secrets handled via references per the Isolation Principle
 
 **Validate Phase → Reports:**
 - Test results, coverage report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`, validation summary
-- Spec frontmatter: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
-- MUST map results to Coverage spec test cases
-- MUST include spec coverage percentage
+- Spec frontmatter reflecting validated state
+- Results mapped to Coverage spec test cases with coverage percentages surfaced
 
 **Phase State Tracking:**
 

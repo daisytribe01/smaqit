@@ -1,16 +1,16 @@
 # Templates
 
-Templates define the structure that agents MUST follow when producing output. This document establishes the rules for both specification templates, agent templates and prompt templates.
+Templates shape how agents express their outputs. They provide consistent structure for specifications, agent definitions, and prompts.
 
 ## Template Types
 
-smaqit uses three types of templates:
+smaqit relies on three template families:
 
-| Type | Location | Purpose | Produces |
-|------|----------|---------|----------|
-| **Specification templates** | `templates/specs/` | Structure for spec documents | `specs/**/*.md` |
-| **Agent templates** | `templates/agents/` | Structure for agent definitions | `agents/*.agent.md` |
-| **Prompt templates** | `templates/prompts/` | Structure for prompt files | `.github/prompts/*.prompt.md` |
+| Type | Purpose | Produces |
+|------|---------|----------|
+| **Specification templates** | Structure for specification documents | Layered specs |
+| **Agent templates** | Structure for agent definitions | Agent manifests |
+| **Prompt templates** | Structure for prompt files | Layer and phase prompts |
 
 ## Placeholder Convention
 
@@ -43,7 +43,7 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 | `[LAYER]` | Lowercase layer name (e.g., `business`) |
 | `[LAYER_NAME]` | Title case layer name (e.g., `Business`) |
 | `[LAYER_PREFIX]` | 3-letter layer code (e.g., `BUS`) |
-| `[LAYER_SPECIFIC_RULES]` | MUST/MUST NOT from LAYERS.md |
+| `[LAYER_SPECIFIC_RULES]` | Layer guardrails derived from LAYERS.md |
 
 **Implementation agent placeholders:**
 
@@ -57,7 +57,7 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 | `[PHASE_SEQUENCE_NOTE]` | Phase position in workflow (e.g., `Phase 1 of 3`) |
 | `[PHASE_SPEC_LAYERS]` | Which spec layers are generated in this phase |
 | `[PHASE_SPEC_SUMMARY]` | Brief summary of specs in this phase (e.g., `business, functional, stack specs`) |
-| `[PHASE_SPECIFIC_RULES]` | MUST/MUST NOT from PHASES.md |
+| `[PHASE_SPECIFIC_RULES]` | Phase guardrails derived from PHASES.md |
 | `[ROLE_DETAILS]` | Phase-specific role description |
 | `[OUTPUT_ARTIFACTS]` | What artifacts are produced |
 | `[OUTPUT_FORMAT]` | Format of output artifacts |
@@ -67,20 +67,9 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 
 Specification templates define the structure for spec documents produced by specification agents.
 
-### Location
-
-```
-templates/specs/
-├── business.template.md
-├── functional.template.md
-├── stack.template.md
-├── infrastructure.template.md
-└── coverage.template.md
-```
-
 ### Required Sections
 
-Every specification template MUST include:
+Specification templates share common sections to anchor clarity and traceability:
 
 | Section | Purpose |
 |---------|---------|
@@ -91,9 +80,9 @@ Every specification template MUST include:
 | [Layer-specific content] | Varies by layer |
 | Acceptance Criteria | Testable requirements with IDs |
 
-**Frontmatter Requirements:**
+**Frontmatter Expectations:**
 
-All spec templates MUST begin with YAML frontmatter:
+Spec templates open with YAML frontmatter capturing identity and lifecycle:
 
 ```yaml
 ---
@@ -106,50 +95,32 @@ prompt_version: [GIT_HASH]
 
 **Required frontmatter fields:**
 - `id`: Spec identifier (e.g., `BUS-LOGIN`, `FUN-AUTH-FLOW`)
-- `status`: Initial state is always `draft`
+- `status`: Initial state is `draft`
 - `created`: ISO8601 timestamp when spec generated
 - `prompt_version`: Git commit hash of prompt file at generation
 
-**Optional frontmatter fields** (added by implementation agents):
-- `implemented`: Timestamp when Development agent completed
-- `deployed`: Timestamp when Deployment agent completed
-- `validated`: Timestamp when Validation agent completed
+**Optional frontmatter fields** (added during execution):
+- `implemented`: Timestamp when development completes
+- `deployed`: Timestamp when deployment completes
+- `validated`: Timestamp when validation completes
 
-Specification agents MUST generate frontmatter with required fields. Implementation agents update frontmatter as specs progress through phases.
+Frontmatter reflects how specifications move through phases, capturing both origin and progress.
 
-### Compliance Rules
+### Consistency Principles
 
-When producing specs from templates:
-
-- Agents MUST use the template from `templates/specs/[LAYER].template.md`
-- Agents MUST produce consistent output structure across all runs
-- Agents MUST NOT add sections not defined in the template
-- Agents MUST NOT omit required sections from the template
-- Agents MUST NOT leave placeholder text in completed specs
-- Agents MUST minimize variance in generated artifacts
+Templates encourage consistent structure across runs, discourage stray sections or placeholders, and reduce variance so downstream consumers receive predictable documents.
 
 ### Placeholder Handling
 
-- All placeholders MUST be replaced with actual content
-- If a section is not applicable, state "Not applicable: [reason]"
-- Empty sections are not permitted
+Placeholders are replaced with concrete content. When a section truly does not apply, state the reason rather than leave it empty.
 
 ## Agent Templates
 
 Agent templates define the structure for agent definition files.
 
-### Location
-
-```
-templates/agents/
-├── specification-agent.template.md
-├── implementation-agent.template.md
-└── orchestrator-agent.template.md
-```
-
 ### Required Sections
 
-Every agent template MUST include:
+Agent templates share core sections that describe identity, purpose, inputs, outputs, directives, and completion thinking:
 
 | Section | Purpose |
 |---------|---------|
@@ -158,7 +129,7 @@ Every agent template MUST include:
 | Framework Reference | Links to relevant framework files |
 | Input | Upstream specs and user input |
 | Output | Location, template, format |
-| Directives | MUST/MUST NOT/SHOULD rules |
+| Directives | Guidance and guardrails |
 | Completion Criteria | Self-validation checklist |
 | Failure Handling | Error response table |
 
@@ -191,18 +162,9 @@ Note: The code fence above is for illustration only. Actual agent files start di
 
 Prompt templates define the structure for prompt files that serve as input records and agent invocation interface.
 
-### Location
-
-```
-templates/prompts/
-├── specification-prompt.template.md
-├── implementation-prompt.template.md
-└── orchestrator-prompt.template.md
-```
-
 ### Required Sections
 
-Every prompt template MUST include:
+Prompt templates share core sections:
 
 | Section | Purpose |
 |---------|---------|
@@ -257,7 +219,7 @@ Templates and shipped prompts include examples wrapped in HTML comments:
 [User writes actual actors here]
 ```
 
-**Critical:** Agents MUST ignore HTML comments to prevent example requirements from contaminating generated specs.
+Agents treat HTML comments as guidance only, keeping example text out of generated specifications.
 
 ### Single Manifest Pattern
 
@@ -269,10 +231,4 @@ Unlike specifications (one file per concept), prompts are **single manifest file
 
 ## Template Completeness
 
-A template is complete when:
-
-- [ ] All required sections are present
-- [ ] Placeholders are clearly marked with `[PLACEHOLDER]` format
-- [ ] Section purposes are unambiguous
-- [ ] Layer-specific rules from LAYERS.md are incorporated (for spec templates)
-- [ ] Comment examples use `<!-- Example: ... -->` format (for prompt templates)
+A template feels complete when required sections are present, placeholders are clearly marked, purposes are unambiguous, and guidance remains inside comments rather than the main content.
