@@ -32,11 +32,7 @@ Each layer has its own prompt file where users input requirements. Upstream laye
 
 **Each piece of information should exist in exactly one place.**
 
-When information is needed in multiple contexts, reference the source rather than duplicate. Foundation specs contain shared requirements that multiple feature specs depend on. This prevents conflicting sources of truth, reduces maintenance burden, and ensures consistency across specifications.
-
-- **Agents MUST NOT** duplicate information from existing specs—use Foundation Reference for same-layer or Implements/Enables for upstream
-- **Agents SHOULD** update existing specs when extending a concept, create new specs only for distinct concepts
-- **Agents SHOULD** reference foundation specs for shared requirements using Foundation Reference section
+When information is needed in multiple contexts, reference the source rather than duplicate. Foundation specs contain shared requirements that multiple feature specs depend on. This prevents conflicting sources of truth, reduces maintenance burden, and ensures consistency across specifications. Existing specifications are extended when concepts grow, while new specifications are created only for distinct concepts. Same-layer and upstream references replace duplication.
 
 ### Specification Coverage
 

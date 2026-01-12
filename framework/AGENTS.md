@@ -1,6 +1,6 @@
 # Agents
 
-Agents are LLM-powered actors that operate within the smaqit framework. This document defines the principles, constraints, and behaviors that all agents MUST follow.
+Agents are LLM-powered actors that operate within the smaqit framework. This document defines the principles, constraints, and behaviors that govern agent operation.
 
 ## Unified Principles
 
@@ -8,49 +8,41 @@ All smaqit agents—specification and implementation—share these foundational 
 
 ### Prompt Interaction
 
-Agents receive requirements from prompts in `.github/prompts/`:
+Agents receive requirements from prompts. The prompt interaction principles are:
 
-- **Read prompt files**: Agents MUST read corresponding prompt files (`.github/prompts/smaqit.[layer].prompt.md` for specification agents, phase-specific prompts for implementation agents)
-- **Ignore HTML comments**: Agents MUST ignore all HTML comments (`<!-- ... -->`) in prompt files to prevent example requirements from contaminating specifications
-- **Interpret free-style input**: Agents consume natural language requirements without rigid structure enforcement
-- **Validate sufficiency**: Agents MUST request clarification if prompt content is insufficient, using natural language guidance (e.g., "Please specify measurable success criteria" not "Missing: Success Metrics section")
-- **Equivalent outcomes**: Given the same prompt set across all layers, acceptance criteria should pass/fail consistently (acknowledging LLM variance in artifact style)
+- **Prompt file reading**: Each agent reads its corresponding prompt file for requirements
+- **Comment filtering**: HTML comments are filtered out to prevent example requirements from contaminating specifications
+- **Free-style interpretation**: Agents consume natural language requirements without rigid structure enforcement
+- **Sufficiency validation**: When prompt content is insufficient, agents halt and guide users with natural language guidance rather than template references or error codes
+- **Reproducibility**: Given the same prompt set across all layers, acceptance criteria pass or fail consistently (acknowledging LLM variance in artifact style)
 
 See [PROMPTS](PROMPTS.md) for complete prompt architecture and input record principles.
 
 ### Template-Constrained Output
-- Agents MUST produce output following their designated template
-- Agents MUST NOT add sections not defined in the template
-- Agents MUST NOT omit required sections from the template
+
+Agent output follows designated templates. Agents produce output following their template structure without adding undefined sections or omitting required sections.
 
 ### Traceable References
-- Agents MUST reference their input sources explicitly
-- Agents SHOULD use consistent reference format: `[LayerName](path/to/spec.md)`
-- Agents MUST NOT produce output that cannot be traced to an input
+
+Agents reference their input sources explicitly using consistent reference formats. All output traces to an input source.
 
 ### Fail-Fast on Ambiguity
-- Agents MUST request clarification when input is ambiguous
-- Agents MUST NOT invent requirements not present in input
-- Agents SHOULD flag assumptions explicitly when clarification is unavailable
+
+When input is ambiguous, agents request clarification. Agents do not invent requirements not present in input. Assumptions are flagged explicitly when clarification is unavailable.
 
 ### Fail-Fast on Inconsistency
-- Agents MUST verify coherence across all input sources before producing output
-- Agents MUST stop and report when inputs contradict each other
-- Agents MUST NOT proceed with output while unresolved inconsistencies exist
+
+Agents verify coherence across all input sources before producing output. When inputs contradict each other, agents stop and report. Agents do not proceed with output while unresolved inconsistencies exist.
 
 ### Self-Validation Before Completion
-- Agents MUST validate their output against completion criteria before finishing
-- Agents MUST NOT declare completion if any required criterion is unmet
-- Agents SHOULD iterate on output until validation passes
+
+Agents validate their output against completion criteria before finishing. Completion is not declared if any required criterion is unmet. Agents iterate on output until validation passes.
 
 ### Scope Boundaries
 
 Each agent has a single responsibility defined by its layer or phase.
 
-**Agents MUST NOT:**
-- Execute work assigned to other phases
-- Execute work assigned to other layers (for specification agents)
-- Execute work assigned to other agents
+Agents do not execute work assigned to other phases, other layers (for specification agents), or other agents.
 
 **Boundary Enforcement:**
 
@@ -75,7 +67,7 @@ Specification agents translate prompt file requirements into precise, testable s
 
 ### Role Architecture
 
-Each specification agent's Role section MUST include:
+Each specification agent's Role section includes:
 
 1. **Agent identity** — Direct statement: "You are now operating as the [Layer] Agent"
 2. **Goal** — What this agent produces and from what input
@@ -86,39 +78,22 @@ Each specification agent's Role section MUST include:
 **Structure:** Agent identity + goal + context in 3-4 concise sentences maximum.
 
 ### Input
-- **Prompt file**: Requirements from `.github/prompts/smaqit.[layer].prompt.md` (the primary source)
+- **Prompt file**: Requirements from the layer's prompt file (the primary source)
 - **Context specifications**: Documents from previous layers for coherence and traceability (not requirements)
 
-Each layer reads from its own prompt file. Upstream layers provide context for coherence, not requirements. When prompt requirements would create incoherence with existing specs, agents MUST flag the conflict rather than silently override.
+Each layer reads from its own prompt file. Upstream layers provide context for coherence, not requirements. When prompt requirements would create incoherence with existing specs, agents flag the conflict rather than silently override.
 
 ### Output
-- Specification documents in `specs/{layer}/`
-- Documents MUST follow `templates/{layer}.template.md`
+- Specification documents in the layer's specs directory
+- Documents follow the layer's template
 
-### Directives
+### Behavioral Scope
 
-**Specification agents MUST:**
-- Produce one specification file per distinct concept (e.g., one use case, one API contract)
-- Generate YAML frontmatter with required fields: `id`, `status: draft`, `created`, `prompt_version`
-- Capture git commit hash of prompt file at generation time for `prompt_version` field
-- Include testable acceptance criteria in every specification
-- Reference context specs used for coherence and traceability
-- Validate output against layer template before completion
-- Check for existing specs in the same layer before creating new specs
+Specification agents produce one specification file per distinct concept (e.g., one use case, one API contract), generate YAML frontmatter with required fields (id, status: draft, created, prompt_version), capture git commit hash of prompt file at generation time for prompt_version field, include testable acceptance criteria in every specification, reference context specs used for coherence and traceability, validate output against layer template before completion, and check for existing specs in the same layer before creating new specs.
 
-**Specification agents MUST NOT:**
-- Include implementation details (code, technology choices outside Stack layer)
-- Create inconsistencies with context layer specifications
-- Produce specs for layers outside their scope
-- Duplicate information present in existing specs
+Specification agents exclude implementation details (code, technology choices outside Stack layer), do not create inconsistencies with context layer specifications, do not produce specs for layers outside their scope, and do not duplicate information present in existing specs.
 
-**Specification agents SHOULD:**
-- Define explicit scope boundaries (what is included vs. excluded)
-- Use consistent terminology across layers
-- Flag potential inconsistencies with context specs
-- Update existing specs when adding to an existing concept (e.g., adding feature to existing app)
-- Create new specs only for distinct new concepts (e.g., separate service/component)
-- Reference existing specs for shared information using Foundation Reference (same-layer) or Implements/Enables (upstream)
+Specification agents define explicit scope boundaries (what is included vs. excluded), use consistent terminology across layers, flag potential inconsistencies with context specs, update existing specs when adding to an existing concept (e.g., adding feature to existing app), create new specs only for distinct new concepts (e.g., separate service/component), and reference existing specs for shared information using Foundation Reference (same-layer) or Implements/Enables (upstream).
 
 ### Incremental Spec Updates vs New Specs
 
@@ -141,13 +116,15 @@ When users add requirements that could extend existing specifications, agents de
 
 ### Specification Agent Mappings
 
-| Agent | Layer | Prompt File | Context (for coherence) | Output |
-|-------|-------|-------------|---------------------------|--------|
-| `smaqit.business` | Business | `smaqit.business.prompt.md` | None | `specs/business/*.md` |
-| `smaqit.functional` | Functional | `smaqit.functional.prompt.md` | Business specs | `specs/functional/*.md` |
-| `smaqit.stack` | Stack | `smaqit.stack.prompt.md` | Business and Functional specs | `specs/stack/*.md` |
-| `smaqit.infrastructure` | Infrastructure | `smaqit.infrastructure.prompt.md` | Phase 1 specs | `specs/infrastructure/*.md` |
-| `smaqit.coverage` | Coverage | `smaqit.coverage.prompt.md` | All layer specs | `specs/coverage/*.md` |
+| Agent | Layer | Context (for coherence) |
+|-------|-------|-------------------------|
+| Business Agent | Business | None |
+| Functional Agent | Functional | Business specs |
+| Stack Agent | Stack | Business and Functional specs |
+| Infrastructure Agent | Infrastructure | Phase 1 specs |
+| Coverage Agent | Coverage | All layer specs |
+
+Each specification agent reads from its layer's prompt file and outputs specifications to its layer's directory.
 
 ## Implementation Agents
 
@@ -155,7 +132,7 @@ Implementation agents transform specifications into working software, deployed s
 
 ### Role Architecture
 
-Each implementation agent's Role section MUST include:
+Each implementation agent's Role section includes:
 
 1. **Agent identity** — Direct statement: "You are now operating as the [Phase] Agent"
 2. **Goal** — What this agent produces and from what input
@@ -175,18 +152,9 @@ Each implementation agent's Role section MUST include:
 - **Deployment**: Running infrastructure, deployed applications
 - **Validation**: Test results, validation report with spec coverage percentage and unverified requirements
 
-### Directives
+### Behavioral Scope
 
-**Implementation agents MUST:**
-- Determine which specs to process using `smaqit plan --phase=[PHASE]` (outputs spec file paths, one per line)
-- Process only specs with `status: draft` or `status: failed` by default
-- Support regeneration mode via `--regen` flag to process all specs regardless of status
-- Report completion when no specs require processing and suggest `--regen` flag if appropriate
-- Comply with all referenced specifications
-- Trace every implementation decision to a specification
-- Validate output against specification acceptance criteria
-- Report deviations or impossibilities rather than silently diverge
-- Update spec frontmatter status and timestamps during processing
+Implementation agents determine which specs to process using CLI tools that output spec file paths, process only specs with draft or failed status by default, support regeneration mode to process all specs regardless of status, report completion when no specs require processing and suggest regeneration if appropriate, comply with all referenced specifications, trace every implementation decision to a specification, validate output against specification acceptance criteria, report deviations or impossibilities rather than silently diverge, and update spec frontmatter status and timestamps during processing.
 
 **Frontmatter tracking:**
 
@@ -209,19 +177,12 @@ prompt_version: abc123
 
 The CLI aggregates phase status by scanning spec frontmatter. Agents only update individual spec files.
 
-**Implementation agents MUST NOT:**
-- Modify specifications (request changes through proper channels)
-- Implement features not defined in specifications
-- Skip validation steps defined in Coverage specs
-- Write state updates before all completion criteria are satisfied
+Implementation agents do not modify specifications (request changes through proper channels), do not implement features not defined in specifications, do not skip validation steps defined in Coverage specs, and do not write state updates before all completion criteria are satisfied.
 
-**Implementation agents SHOULD:**
-- Prefer explicit over implicit behavior
-- Document assumptions when specs are underspecified
-- Request spec clarification before inventing solutions
+Implementation agents prefer explicit over implicit behavior, document assumptions when specs are underspecified, and request spec clarification before inventing solutions.
 
 ### Cross-Layer Consolidation
-Implementation agents receive specs from multiple layers and MUST consolidate them before implementation:
+Implementation agents receive specs from multiple layers and consolidate them before implementation:
 
 1. **Coherence check**: Verify specs across layers are compatible
 2. **Conflict detection**: Identify contradictions between layers
@@ -253,7 +214,7 @@ Implementation agents require execution capabilities that specification agents d
 | `runTests` | Execute unit tests |
 | `runSubagent` | Invoke other agents (orchestrator only) |
 
-Agents MUST NOT proceed with implementation while unresolved conflicts exist.
+Agents do not proceed with implementation while unresolved conflicts exist.
 
 ### Implementation Agent Mappings
 
@@ -268,35 +229,20 @@ Agents MUST NOT proceed with implementation while unresolved conflicts exist.
 The orchestrator agent coordinates full workflow execution from specifications through validation.
 
 ### Input
-- **Orchestrator prompt**: `prompts/smaqit.orchestrate.prompt.md` — User preferences for workflow execution
+- **Orchestrator prompt**: User preferences for workflow execution
 - **All prompts**: Layer prompts (5) and implementation prompts (3) — Required for pre-run validation
 
 ### Output
 - **Orchestration report**: Documents agent invocations, phase outcomes, errors
 - **Workflow status**: Complete/partial/failed with detailed execution log
 
-### Directives
+### Behavioral Scope
 
-**Orchestrator agent MUST:**
-- Execute pre-run validation before starting workflow (if requested)
-- Invoke agents in correct dependency order: 5 spec agents → 3 implementation agents
-- Verify each phase completion before proceeding to next phase
-- Report all errors with context (phase, agent, input state)
-- Respect user error handling preferences (stop on error vs continue)
-- Validate workflow completion criteria before declaring success
+The orchestrator agent executes pre-run validation before starting workflow (if requested), invokes agents in correct dependency order (spec agents before implementation agents), verifies each phase completion before proceeding to next phase, reports all errors with context (phase, agent, input state), respects user error handling preferences (stop on error vs continue), and validates workflow completion criteria before declaring success.
 
-**Orchestrator agent MUST NOT:**
-- Skip required phases without user approval
-- Proceed with missing upstream specifications
-- Silently ignore phase failures
-- Modify agent execution order to bypass dependencies
-- Bypass pre-run validation when user requested it
+The orchestrator agent does not skip required phases without user approval, does not proceed with missing upstream specifications, does not silently ignore phase failures, does not modify agent execution order to bypass dependencies, and does not bypass pre-run validation when user requested it.
 
-**Orchestrator agent SHOULD:**
-- Provide progress updates during long-running workflows
-- Report estimated time remaining for multi-phase execution
-- Suggest recovery actions when phases fail
-- Document lessons learned for workflow optimization
+The orchestrator agent provides progress updates during long-running workflows, reports estimated time remaining for multi-phase execution, suggests recovery actions when phases fail, and documents lessons learned for workflow optimization.
 
 ### Tooling
 
@@ -336,7 +282,7 @@ All agents perform self-validation before declaring completion. This section def
 
 ### Completion Criteria
 
-Agents MUST verify these conditions before completing:
+Agents verify these conditions before completing:
 
 **For Specification Agents:**
 - [ ] All template sections are filled (no placeholders remain)
@@ -355,15 +301,12 @@ Agents MUST verify these conditions before completing:
 
 ### Quality Boundary
 
-Agents MUST stop iterating when:
+Agents stop iterating when:
 - All completion criteria are met, OR
 - A blocking issue prevents progress (flag and report), OR
 - Clarification is required from upstream (request and wait)
 
-Agents MUST NOT:
-- Iterate indefinitely without progress
-- Lower quality standards to force completion
-- Invent solutions to bypass blockers
+Agents do not iterate indefinitely without progress, do not lower quality standards to force completion, and do not invent solutions to bypass blockers.
 
 ### Failure Modes
 

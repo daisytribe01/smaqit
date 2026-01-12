@@ -1,6 +1,6 @@
 # Artifacts
 
-Artifacts are the outputs produced by agents. This document establishes the rules all artifacts MUST follow.
+Artifacts are the outputs produced by agents. This document establishes the principles governing all artifacts.
 
 There are two types of artifacts:
 - **Specification artifacts** — Declarative documents stating what must be true
@@ -16,7 +16,7 @@ A specification is complete when another agent (or human) can implement or valid
 
 ### Requirement Identifiers
 
-Every acceptance criterion MUST have a unique identifier for traceability.
+Every acceptance criterion has a unique identifier for traceability.
 
 **Format:**
 ```
@@ -39,11 +39,11 @@ Every acceptance criterion MUST have a unique identifier for traceability.
 | Infrastructure | `INF-[CONCEPT]-001` | [Deployment or scaling requirement] |
 | Coverage | `COV-[CONCEPT]-001` | Test case for [upstream requirement ID] |
 
-**Rules:**
-- IDs MUST be unique within the project
-- IDs MUST NOT be reused after deletion (mark as deprecated instead)
-- IDs MUST remain stable—never rename an ID, only deprecate and create new
-- Related criteria SHOULD share the same `CONCEPT` segment
+**ID Principles:**
+- IDs are unique within the project
+- IDs are not reused after deletion (mark as deprecated instead)
+- IDs remain stable—never renamed, only deprecated and replaced with new
+- Related criteria share the same `CONCEPT` segment
 
 ### Acceptance Criteria
 
@@ -59,7 +59,7 @@ Acceptance criteria define testable conditions that must be satisfied.
 
 **Testability Requirements:**
 
-Every criterion MUST be:
+Every criterion is:
 
 | Property | Definition | Good Example | Bad Example |
 |----------|------------|--------------|-------------|
@@ -69,7 +69,7 @@ Every criterion MUST be:
 
 **Untestable Criteria:**
 
-Some requirements cannot be automatically validated. These MUST be flagged:
+Some requirements cannot be automatically validated. These are flagged:
 
 ```markdown
 - [ ] BUS-UX-002: Dashboard feels modern and engaging *(untestable)*
@@ -78,20 +78,17 @@ Some requirements cannot be automatically validated. These MUST be flagged:
   - **Resolution**: Defer to manual UX review; exclude from automated coverage
 ```
 
-Untestable criteria:
-- MUST be flagged with `*(untestable)*` marker
-- MUST include a proposal for measurable alternatives or resolution
-- MUST NOT block spec completion
+Untestable criteria are flagged with `*(untestable)*` marker, include a proposal for measurable alternatives or resolution, and do not block spec completion.
 
 ### Traceability
 
-Specifications MUST reference their sources explicitly.
+Specifications reference their sources explicitly.
 
 **Reference Types:**
 
 | Type | Meaning | Use Case |
 |------|---------|----------|
-| **Prompt File** | Layer-specific prompt (`.github/prompts/smaqit.[layer].prompt.md`) | Primary source for layer requirements |
+| **Prompt File** | Layer-specific prompt | Primary source for layer requirements |
 | **Context** | Adjacent layer spec used for coherence | Ensures cross-layer coherence |
 
 **Cross-Layer Traceability:**
@@ -147,7 +144,7 @@ Specs reference adjacent layers for coherence and traceability. Context referenc
 - [FUN-[CONCEPT]-NNN](../functional/feature.md) — Implements feature functionality
 ```
 
-**Foundation Reference Rules:**
+**Foundation Reference Principles:**
 - Use when a feature spec extends a foundation spec in the same layer
 - Foundation specs contain shared requirements that multiple feature specs depend on
 - Example: Feature spec "[STK-CLI]" references foundation spec "[STK-PYTHON-BASE]" for base Python 3.8+ and development environment requirements
@@ -167,9 +164,9 @@ When a foundation spec precedes Business specs or serves anticipated needs:
 
 Orphaned foundations (no references, no justification) should be flagged by Coverage.
 
-**Rules:**
-- Every spec (except Business) MUST have a References section
-- References MUST use relative paths within `specs/`
+**Reference Principles:**
+- Every spec (except Business) has a References section
+- References use relative paths within `specs/`
 - References provide context for coherence, not requirements
 - Implementation agents validate cross-layer coherence
 
@@ -202,10 +199,10 @@ Feature: [Feature Name]
     Then [expected outcome]
 ```
 
-**Coverage Rules:**
-- Each testable criterion MUST map to at least one test case
-- Coverage IDs MUST reference their source requirement ID
-- Untestable criteria MUST be listed with justification for exclusion
+**Coverage Principles:**
+- Each testable criterion maps to at least one test case
+- Coverage IDs reference their source requirement ID
+- Untestable criteria are listed with justification for exclusion
 - Spec coverage % = (tested criteria / total testable criteria) × 100
 
 ### File Organization
@@ -218,19 +215,12 @@ Feature: [Feature Name]
 | `user-registration.md` — Registration flow | `users.md` — Registration, profile, settings, deletion |
 
 **Naming Conventions:**
-- Use lowercase with hyphens: `user-login.md`, `api-authentication.md`
-- Match the primary concept name
-- Avoid generic names: `misc.md`, `other.md`, `notes.md`
 
-**Directory Structure:**
-```
-specs/
-├── business/
-├── functional/
-├── stack/
-├── infrastructure/
-└── coverage/
-```
+Specification files use lowercase with hyphens, match the primary concept name, and avoid generic names.
+
+**Directory Organization:**
+
+Specifications are organized by layer, with each layer having its own directory (business, functional, stack, infrastructure, coverage).
 
 ### Specification Completeness
 
@@ -307,15 +297,7 @@ Specs become stale when content changes after implementation. Detection is **use
 
 **State Aggregation:**
 
-The CLI aggregates phase status by scanning spec frontmatter. Run `smaqit status` to view:
-
-```
-Develop: 18 implemented, 2 failed
-Deploy: 15 deployed, 3 draft
-Validate: 12 validated, 5 draft
-```
-
-Implementation agents update individual spec frontmatter. The CLI reads all specs and calculates aggregate counts.
+CLI tools aggregate phase status by scanning spec frontmatter, showing per-phase spec counts. Implementation agents update individual spec frontmatter, and CLI reads all specs to calculate aggregate counts.
 
 ---
 
@@ -325,11 +307,11 @@ Implementations are the imperative outputs produced by implementation agents. Th
 
 ### The Anchoring Principle
 
-> "Implementations MUST comply with industry standards for their stack, while satisfying spec-defined behavior. Two compliant implementations may differ internally, but MUST be structurally recognizable and behaviorally equivalent."
+> "Implementations comply with industry standards for their stack, while satisfying spec-defined behavior. Two compliant implementations may differ internally, but are structurally recognizable and behaviorally equivalent."
 
 ### The Isolation Principle
 
-> "Agents operate on references, never values. Secrets and credentials MUST remain outside the agent's context at all times—resolution happens in a trusted execution layer that returns only outcomes, never the sensitive data itself."
+> "Agents operate on references, never values. Secrets and credentials remain outside the agent's context at all times—resolution happens in a trusted execution layer that returns only outcomes, never the sensitive data itself."
 
 ### Three Dimensions
 
@@ -338,23 +320,23 @@ Every implementation exists across three dimensions:
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │ BEHAVIOR (from Specs)                                       │
-│ Invariant — MUST be identical across implementations        │
+│ Invariant — identical across implementations                │
 ├─────────────────────────────────────────────────────────────┤
 │ STRUCTURE (from Industry Standards)                         │
-│ Consistent — SHOULD follow stack-specific best practices    │
+│ Consistent — follows stack-specific best practices          │
 ├─────────────────────────────────────────────────────────────┤
 │ INTERNALS (Implementation Freedom)                          │
-│ Variable — MAY differ, no two implementations identical     │
+│ Variable — may differ, no two implementations identical     │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 **Behavior (Invariant):**
-- Defined by specifications, MUST be satisfied exactly
+- Defined by specifications, satisfied exactly
 - No deviation permitted—behavior is the contract
 
 **Structure (Consistent):**
 - Follows industry standards for the chosen stack
-- Implementations SHOULD be recognizable to practitioners
+- Implementations are recognizable to practitioners
 
 **Internals (Variable):**
 - Variable names, helper functions, internal patterns
@@ -362,7 +344,7 @@ Every implementation exists across three dimensions:
 
 ### Traceability
 
-Implementation code SHOULD include references to specifications:
+Implementation code includes references to specifications:
 
 ```csharp
 /// <summary>
@@ -372,81 +354,50 @@ Implementation code SHOULD include references to specifications:
 public async Task<Result> MethodName(Request request)
 ```
 
-**Rules:**
-- Major components SHOULD reference the spec requirements they implement
-- Traceability MUST be verifiable during validation phase
+**Traceability Principles:**
+- Major components reference the spec requirements they implement
+- Traceability is verifiable during validation phase
 
 ### Validation Requirements
 
 | Dimension | Verifiable? | How |
 |-----------|-------------|-----|
-| Behavior | MUST | Automated tests from Coverage specs |
-| Structure | SHOULD | Static analysis, architectural tests |
-| Internals | NOT REQUIRED | — |
+| Behavior | Required | Automated tests from Coverage specs |
+| Structure | Recommended | Static analysis, architectural tests |
+| Internals | Not required | — |
 
 ### Implementation Artifacts by Phase
 
 **Develop Phase:**
 - Source code, tests, configurations, build files
 - README with build, test, and run instructions
-- Development report in `.smaqit/reports/development-phase-report-YYYY-MM-DD.md` (build/test/run results)
-- Spec frontmatter: `status: implemented`, `implemented: [ISO8601_TIMESTAMP]`
-- Acceptance criteria checkboxes updated in Business, Functional, Stack specs: `[ ]` → `[x]` or `[!]`
-- MUST satisfy all spec acceptance criteria
-- MUST follow stack-specific standards
+- Development report (build/test/run results)
+- Spec frontmatter updated to `status: implemented`
+- Acceptance criteria checkboxes updated in Business, Functional, Stack specs
+- Satisfies all spec acceptance criteria
+- Follows stack-specific standards
 
 **Deploy Phase → Infrastructure:**
 - Infrastructure code (Terraform, etc.)
 - Deployment manifests, environment configs
-- Deployment report in `.smaqit/reports/deployment-phase-report-YYYY-MM-DD.md` with health status and endpoints
-- Spec frontmatter: `status: deployed`, `deployed: [ISO8601_TIMESTAMP]`
-- Acceptance criteria checkboxes updated in Infrastructure specs: `[ ]` → `[x]` or `[!]`
-- MUST NOT hardcode secrets (Isolation Principle)
+- Deployment report with health status and endpoints
+- Spec frontmatter updated to `status: deployed`
+- Acceptance criteria checkboxes updated in Infrastructure specs
+- Secrets remain as references (Isolation Principle)
 
 **Validate Phase → Reports:**
-- Test results, coverage report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`, validation summary
-- Spec frontmatter: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
-- MUST map results to Coverage spec test cases
-- MUST include spec coverage percentage
+- Test results, coverage report, validation summary
+- Spec frontmatter updated to `status: validated`
+- Results mapped to Coverage spec test cases
+- Spec coverage percentage included
 
 **Phase State Tracking:**
 
-Implementation agents update spec frontmatter. CLI aggregates status across all specs.
+Implementation agents update spec frontmatter. CLI aggregates status across all specs. Agents use atomic writes to prevent corruption.
 
-Frontmatter example:
+**Validation Report Content:**
 
-```yaml
----
-id: BUS-LOGIN-001
-status: validated
-created: 2025-12-26T10:00:00Z
-implemented: 2025-12-26T10:30:00Z
-deployed: 2025-12-26T11:00:00Z
-validated: 2025-12-26T11:30:00Z
-prompt_version: abc123
----
-```
-
-Agents use atomic writes (temp file + rename) to prevent corruption. The `smaqit status` command reads this file to display project state.
-
-**Validation Report Format:**
-```markdown
-# Validation Report
-
-## Summary
-- Specs Covered: 47/50 (94%)
-- Tests Passed: 45/47 (96%)
-
-## Coverage Gaps
-| Requirement | Reason |
-|-------------|--------|
-| [REQ-ID] | Untestable: [reason] |
-
-## Failures
-| Test | Requirement | Result | Details |
-|------|-------------|--------|---------|
-| [TEST-ID] | [REQ-ID] | FAIL | [Failure description] |
-```
+Validation reports contain a summary (specs covered percentage, tests passed percentage), coverage gaps (requirements that could not be tested with reasons), and failures (test, requirement, result, and failure details).
 
 ### Implementation Completeness
 

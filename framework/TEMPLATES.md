@@ -1,16 +1,16 @@
 # Templates
 
-Templates define the structure that agents MUST follow when producing output. This document establishes the rules for both specification templates, agent templates and prompt templates.
+Templates define the structure agents follow when producing output. This document establishes the principles for specification templates, agent templates, and prompt templates.
 
 ## Template Types
 
 smaqit uses three types of templates:
 
-| Type | Location | Purpose | Produces |
-|------|----------|---------|----------|
-| **Specification templates** | `templates/specs/` | Structure for spec documents | `specs/**/*.md` |
-| **Agent templates** | `templates/agents/` | Structure for agent definitions | `agents/*.agent.md` |
-| **Prompt templates** | `templates/prompts/` | Structure for prompt files | `.github/prompts/*.prompt.md` |
+| Type | Purpose | Produces |
+|------|---------|----------|
+| **Specification templates** | Structure for spec documents | Layer specification documents |
+| **Agent templates** | Structure for agent definitions | Agent definition files |
+| **Prompt templates** | Structure for prompt files | User prompt files |
 
 ## Placeholder Convention
 
@@ -43,7 +43,7 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 | `[LAYER]` | Lowercase layer name (e.g., `business`) |
 | `[LAYER_NAME]` | Title case layer name (e.g., `Business`) |
 | `[LAYER_PREFIX]` | 3-letter layer code (e.g., `BUS`) |
-| `[LAYER_SPECIFIC_RULES]` | MUST/MUST NOT from LAYERS.md |
+| `[LAYER_SPECIFIC_RULES]` | Layer content scope from LAYERS.md |
 
 **Implementation agent placeholders:**
 
@@ -57,7 +57,7 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 | `[PHASE_SEQUENCE_NOTE]` | Phase position in workflow (e.g., `Phase 1 of 3`) |
 | `[PHASE_SPEC_LAYERS]` | Which spec layers are generated in this phase |
 | `[PHASE_SPEC_SUMMARY]` | Brief summary of specs in this phase (e.g., `business, functional, stack specs`) |
-| `[PHASE_SPECIFIC_RULES]` | MUST/MUST NOT from PHASES.md |
+| `[PHASE_SPECIFIC_RULES]` | Phase content scope from PHASES.md |
 | `[ROLE_DETAILS]` | Phase-specific role description |
 | `[OUTPUT_ARTIFACTS]` | What artifacts are produced |
 | `[OUTPUT_FORMAT]` | Format of output artifacts |
@@ -67,20 +67,13 @@ All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customiz
 
 Specification templates define the structure for spec documents produced by specification agents.
 
-### Location
+### Organization
 
-```
-templates/specs/
-├── business.template.md
-├── functional.template.md
-├── stack.template.md
-├── infrastructure.template.md
-└── coverage.template.md
-```
+Specification templates exist for each layer: Business, Functional, Stack, Infrastructure, and Coverage.
 
 ### Required Sections
 
-Every specification template MUST include:
+Every specification template includes:
 
 | Section | Purpose |
 |---------|---------|
@@ -93,7 +86,7 @@ Every specification template MUST include:
 
 **Frontmatter Requirements:**
 
-All spec templates MUST begin with YAML frontmatter:
+All spec templates begin with YAML frontmatter:
 
 ```yaml
 ---
@@ -115,22 +108,20 @@ prompt_version: [GIT_HASH]
 - `deployed`: Timestamp when Deployment agent completed
 - `validated`: Timestamp when Validation agent completed
 
-Specification agents MUST generate frontmatter with required fields. Implementation agents update frontmatter as specs progress through phases.
+Specification agents generate frontmatter with required fields. Implementation agents update frontmatter as specs progress through phases.
 
-### Compliance Rules
+### Compliance Principles
 
 When producing specs from templates:
 
-- Agents MUST use the template from `templates/specs/[LAYER].template.md`
-- Agents MUST produce consistent output structure across all runs
-- Agents MUST NOT add sections not defined in the template
-- Agents MUST NOT omit required sections from the template
-- Agents MUST NOT leave placeholder text in completed specs
-- Agents MUST minimize variance in generated artifacts
+- Templates define consistent output structure across all runs
+- Sections follow the template without additions or omissions
+- Placeholder text is replaced with actual content
+- Generated artifacts minimize variance
 
 ### Placeholder Handling
 
-- All placeholders MUST be replaced with actual content
+- All placeholders are replaced with actual content
 - If a section is not applicable, state "Not applicable: [reason]"
 - Empty sections are not permitted
 
@@ -138,18 +129,13 @@ When producing specs from templates:
 
 Agent templates define the structure for agent definition files.
 
-### Location
+### Organization
 
-```
-templates/agents/
-├── specification-agent.template.md
-├── implementation-agent.template.md
-└── orchestrator-agent.template.md
-```
+Agent templates exist for specification agents, implementation agents, and the orchestrator agent.
 
 ### Required Sections
 
-Every agent template MUST include:
+Every agent template includes:
 
 | Section | Purpose |
 |---------|---------|
@@ -158,7 +144,7 @@ Every agent template MUST include:
 | Framework Reference | Links to relevant framework files |
 | Input | Upstream specs and user input |
 | Output | Location, template, format |
-| Directives | MUST/MUST NOT/SHOULD rules |
+| Directives | Behavioral rules |
 | Completion Criteria | Self-validation checklist |
 | Failure Handling | Error response table |
 
@@ -191,18 +177,13 @@ Note: The code fence above is for illustration only. Actual agent files start di
 
 Prompt templates define the structure for prompt files that serve as input records and agent invocation interface.
 
-### Location
+### Organization
 
-```
-templates/prompts/
-├── specification-prompt.template.md
-├── implementation-prompt.template.md
-└── orchestrator-prompt.template.md
-```
+Prompt templates exist for specification prompts, implementation prompts, and the orchestrator prompt.
 
 ### Required Sections
 
-Every prompt template MUST include:
+Every prompt template includes:
 
 | Section | Purpose |
 |---------|---------|
@@ -257,7 +238,7 @@ Templates and shipped prompts include examples wrapped in HTML comments:
 [User writes actual actors here]
 ```
 
-**Critical:** Agents MUST ignore HTML comments to prevent example requirements from contaminating generated specs.
+**Critical:** Agents ignore HTML comments to prevent example requirements from contaminating generated specs.
 
 ### Single Manifest Pattern
 

@@ -13,7 +13,7 @@ Prompts are the user-facing interface for smaqit workflows. They capture require
 
 - YAML frontmatter: `name`, `description`, `agent`
 - Requirement sections with layer-specific sub-sections
-- `<!-- Example: ... -->` comments for guidance (agents MUST ignore these)
+- `<!-- Example: ... -->` comments for guidance (agents ignore these)
 - Free-style user content in natural language
 
 **Prompt types:**
@@ -31,29 +31,13 @@ Filled prompts should be committed to version control alongside specs. When requ
 
 ### Location
 
-Prompts live in `.github/prompts/`. This location enables `/smaqit.[layer]` slash command invocation.
-
-**User project structure:**
-```
-project/
-└── .github/
-    └── prompts/
-        ├── smaqit.business.prompt.md
-        ├── smaqit.functional.prompt.md
-        ├── smaqit.stack.prompt.md
-        ├── smaqit.infrastructure.prompt.md
-        ├── smaqit.coverage.prompt.md
-        ├── smaqit.development.prompt.md
-        ├── smaqit.deployment.prompt.md
-        ├── smaqit.validation.prompt.md
-        └── smaqit.orchestrate.prompt.md
-```
+Prompts are organized in a dedicated prompts directory within the project. This location enables slash command invocation for agent activation.
 
 ### Format
 
 **YAML Frontmatter + Free-Style Content**
 
-Prompts use GitHub Copilot prompt format with frontmatter specifying name, description, and agent. See `templates/prompts/` for structure.
+Prompts use GitHub Copilot prompt format with frontmatter specifying name, description, and agent. Prompt templates define the structure.
 
 ### Single Manifest per Layer
 
@@ -71,16 +55,16 @@ Prompts are **natural language inputs**, not rigidly structured forms. Templates
 
 ### Comment Convention for Examples
 
-**Agents MUST ignore HTML comments** (`<!-- -->`). Templates include examples wrapped in `<!-- Example: ... -->` comments for user guidance only.
+**Agents ignore HTML comments** (`<!-- -->`). Templates include examples wrapped in `<!-- Example: ... -->` comments for user guidance only.
 
 ## Agent Interaction
 
 ### Reading Prompts
 
-Agents read prompt files from `.github/prompts/` at the start of execution:
+Agents read prompt files at the start of execution:
 
-1. **Locate prompt**: Agent finds corresponding prompt file (e.g., Business Agent reads `smaqit.business.prompt.md`)
-2. **Ignore comments**: Agent strips all HTML comments before interpretation
+1. **Locate prompt**: Agent finds its corresponding prompt file
+2. **Filter comments**: Agent strips all HTML comments before interpretation
 3. **Parse requirements**: Agent interprets free-style content per layer expectations
 4. **Validate sufficiency**: Agent checks if enough information provided
 
@@ -101,7 +85,7 @@ Agents guide users naturally, not with template references or error codes.
 
 ## Amendment Workflow
 
-When requirements change, users edit prompts and regenerate specs. Prompts are the source, specs are derived. Agents always read from `.github/prompts/`.
+When requirements change, users edit prompts and regenerate specs. Prompts are the source, specs are derived.
 
 ## Prompt Types
 
@@ -109,23 +93,23 @@ When requirements change, users edit prompts and regenerate specs. Prompts are t
 
 Capture requirements for single specification layer:
 
-| Prompt | Layer | Captures | Invokes |
-|--------|-------|----------|---------|
-| `smaqit.business.prompt.md` | Business | Use cases, actors, goals | Business Agent |
-| `smaqit.functional.prompt.md` | Functional | Behaviors, data, contracts | Functional Agent |
-| `smaqit.stack.prompt.md` | Stack | Technologies, tools, rationale | Stack Agent |
-| `smaqit.infrastructure.prompt.md` | Infrastructure | Deployment, scaling, observability | Infrastructure Agent |
-| `smaqit.coverage.prompt.md` | Coverage | Test scope, environment, thresholds | Coverage Agent |
+| Prompt Type | Layer | Captures | Invokes |
+|-------------|-------|----------|---------|
+| Business Prompt | Business | Use cases, actors, goals | Business Agent |
+| Functional Prompt | Functional | Behaviors, data, contracts | Functional Agent |
+| Stack Prompt | Stack | Technologies, tools, rationale | Stack Agent |
+| Infrastructure Prompt | Infrastructure | Deployment, scaling, observability | Infrastructure Agent |
+| Coverage Prompt | Coverage | Test scope, environment, thresholds | Coverage Agent |
 
 ### Implementation Prompts
 
 Trigger single implementation agent with optional execution parameters:
 
-| Prompt | Phase | Captures | Invokes |
-|--------|-------|----------|---------|
-| `smaqit.development.prompt.md` | Development | Build options, output preferences | Development Agent |
-| `smaqit.deployment.prompt.md` | Deployment | Deployment target, verification | Deployment Agent |
-| `smaqit.validation.prompt.md` | Validation | Execution scope, failure handling | Validation Agent |
+| Prompt Type | Phase | Captures | Invokes |
+|-------------|-------|----------|---------|
+| Development Prompt | Development | Build options, output preferences | Development Agent |
+| Deployment Prompt | Deployment | Deployment target, verification | Deployment Agent |
+| Validation Prompt | Validation | Execution scope, failure handling | Validation Agent |
 
 Implementation prompts collect minimal runtime parameters (watch mode, verbosity, skip flags). Agents handle orchestration, validation, and error handling.
 
@@ -133,9 +117,9 @@ Implementation prompts collect minimal runtime parameters (watch mode, verbosity
 
 Coordinates full workflow from specifications through validation:
 
-| Prompt | Captures | Invokes |
-|--------|----------|----------|
-| `smaqit.orchestrate.prompt.md` | Phase selection, pre-validation preferences, error handling | Orchestrator Agent |
+| Prompt Type | Captures | Invokes |
+|-------------|----------|---------|
+| Orchestrator Prompt | Phase selection, pre-validation preferences, error handling | Orchestrator Agent |
 
 Orchestrator prompt collects execution parameters (which phases to run, validation preferences, error handling strategy). Orchestrator agent executes the workflow logic.
 

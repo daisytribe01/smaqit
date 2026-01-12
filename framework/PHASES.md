@@ -24,10 +24,7 @@ Phases are strictly sequential. Deploy cannot begin until Develop completes. Val
 
 **Status Cascade:** Implementation agents update all specifications they reference, not just specs from their target layer.
 
-When an implementation agent processes work:
-1. Identifies specs via `smaqit plan --phase=[PHASE]` (returns target layer specs)
-2. References upstream specs for coherence/context
-3. Updates frontmatter in ALL referenced specs to reflect phase completion
+When an implementation agent processes work, it identifies target specs, references upstream specs for coherence and context, and updates frontmatter in all referenced specs to reflect phase completion.
 
 **Rationale:** If an implementation agent reads a specification for implementation context, that specification has been implemented/deployed/validated in that phase. Status must reflect reality for accurate lifecycle tracking.
 
@@ -38,23 +35,18 @@ When an implementation agent processes work:
 The Develop phase transforms user requirements into a working, tested application running in an isolated environment.
 
 **Specification Agents:**
-| Agent | Layer | User Input | Context | Output |
-|-------|-------|------------|---------|--------|
-| `smaqit.business` | Business | Stakeholder goals | None | `specs/business/*.md` |
-| `smaqit.functional` | Functional | Experience shape | Business specs | `specs/functional/*.md` |
-| `smaqit.stack` | Stack | Technology preferences | Business and Functional specs | `specs/stack/*.md` |
 
-**Implementation Agent:** `smaqit.development`
+| Agent | Layer | User Input | Context |
+|-------|-------|------------|---------|
+| Business Agent | Business | Stakeholder goals | None |
+| Functional Agent | Functional | Experience shape | Business specs |
+| Stack Agent | Stack | Technology preferences | Business and Functional specs |
+
+**Implementation Agent:** Development Agent
 
 **Pre-Run Validation:**
 
-Before starting, the Development agent validates all required prompt files are filled:
-
-- `.github/prompts/smaqit.business.prompt.md` has content
-- `.github/prompts/smaqit.functional.prompt.md` has content
-- `.github/prompts/smaqit.stack.prompt.md` has content
-
-If any prompt is empty or insufficient, agent halts and guides user: "Please fill [prompt file] with your [layer] requirements before starting development."
+Before starting, the Development agent validates all required prompt files for Business, Functional, and Stack layers contain content. If any prompt is empty or insufficient, the agent halts and guides the user with natural language prompts to fill requirements.
 
 **Workflow:**
 ```
@@ -99,20 +91,16 @@ If any prompt is empty or insufficient, agent halts and guides user: "Please fil
 The Deploy phase transforms a working application into a running system in a target environment.
 
 **Specification Agent:**
-| Agent | Layer | User Input | Context | Output |
-|-------|-------|------------|---------|--------|
-| `smaqit.infrastructure` | Infrastructure | Deployment requirements | Phase 1 specs | `specs/infrastructure/*.md` |
 
-**Implementation Agent:** `smaqit.deployment`
+| Agent | Layer | User Input | Context |
+|-------|-------|------------|---------|
+| Infrastructure Agent | Infrastructure | Deployment requirements | Phase 1 specs |
+
+**Implementation Agent:** Deployment Agent
 
 **Pre-Run Validation:**
 
-Before starting, check `.github/prompts/smaqit.infrastructure.prompt.md` for content beyond template structure:
-
-- If empty or only contains comments: Halt with natural language guidance
-- Example guidance: "Please specify your target environment (cloud, on-premise, hybrid), hosting platform, and service topology requirements"
-
-If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
+Before starting, the Deployment agent checks that the Infrastructure prompt file contains content beyond template structure. If empty or only contains comments, it halts with natural language guidance requesting target environment, hosting platform, and service topology requirements. If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
 
 **User Input Required:**
 
@@ -190,44 +178,26 @@ See [ARTIFACTS](ARTIFACTS.md) for the Isolation Principle.
 The Validate phase verifies that the deployed system satisfies all specification requirements.
 
 **Specification Agent:**
-| Agent | Layer | Input | Output |
-|-------|-------|-------|--------|
-| `smaqit.coverage` | Coverage | All layer specs | `specs/coverage/*.md` |
 
-**Implementation Agent:** `smaqit.validation`
+| Agent | Layer | Input |
+|-------|-------|-------|
+| Coverage Agent | Coverage | All layer specs |
+
+**Implementation Agent:** Validation Agent
 
 **Pre-Run Validation:**
 
-Before starting, check `.github/prompts/smaqit.coverage.prompt.md` for content beyond template structure:
-
-- If empty or only contains comments: Halt with natural language guidance
-- Example guidance: "Please specify the test scenarios, validation criteria, and acceptance thresholds for your application"
-
-If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
+Before starting, the Validation agent checks that the Coverage prompt file contains content beyond template structure. If empty or only contains comments, it halts with natural language guidance requesting test scenarios, validation criteria, and acceptance thresholds. If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
 
 **Workflow:**
-```
-1. Coverage agent:
-   a. Reads all upstream specs (business, functional, stack, infrastructure)
-   b. Enumerates all acceptance criteria by ID
-   c. Produces test definitions (Gherkin format)
-   d. Maps: Requirement ID → Test Case → Expected Outcome
-   e. Flags untestable criteria
 
-2. Validation agent:
-   a. Executes tests against deployed system
-   b. Collects pass/fail results per test case
-   c. Calculates spec coverage percentage
-   d. Produces validation report
-```
+The Coverage agent reads all upstream specs (business, functional, stack, infrastructure), enumerates all acceptance criteria by ID, produces test definitions, maps requirements to test cases to expected outcomes, and flags untestable criteria.
+
+The Validation agent executes tests against the deployed system, collects pass/fail results per test case, calculates spec coverage percentage, and produces the validation report.
 
 **Environment:** Same target environment as Deploy phase
 
-**Output:** Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
-- Spec coverage percentage
-- Pass/fail status per requirement
-- Unverified requirements with justification
-- Failure details for failed tests
+**Output:** Validation report containing spec coverage percentage, pass/fail status per requirement, unverified requirements with justification, and failure details for failed tests.
 
 **Failure Handling:**
 - Test failures do NOT trigger automatic retry
@@ -310,11 +280,7 @@ Implementation agents iterate on failures up to a configurable threshold:
 
 ### Failure Documentation
 
-Each failure attempt MUST document:
-- What was attempted
-- What failed (error message, scrubbed if sensitive)
-- What was changed before retry
-- Final status after threshold exceeded
+Each failure attempt documents what was attempted, what failed (error message, scrubbed if sensitive), what was changed before retry, and final status after threshold exceeded.
 
 ### Escalation
 
@@ -375,37 +341,15 @@ Each spec carries state through phases via frontmatter:
 
 **Determining Work:**
 
-Implementation agents run `smaqit plan --phase=[PHASE]` to get paths to specs needing processing:
-
-| Mode | Command | Processes |
-|------|---------|-----------|
-| Incremental | `smaqit plan --phase=develop` | Only specs with `status: draft` or `status: failed` |
-| Regeneration | `smaqit plan --phase=develop --regen` | All specs regardless of status |
+Implementation agents determine which specs need processing. In incremental mode, only specs with draft or failed status are processed. In regeneration mode, all specs are processed regardless of status.
 
 **Adding Features:**
 
-```
-1. User adds requirements to prompt file
-2. Spec agent generates new specs (status: draft)
-3. Implementation agent runs `smaqit plan --phase=develop`
-4. CLI returns only new draft specs (existing implemented specs skipped)
-5. Agent processes returned paths
-6. Tests validate new + existing functionality
-```
+When users add new requirements to prompt files, specification agents generate new specs with draft status. Implementation agents identify and process only the new draft specs, skipping existing implemented specs. Tests validate both new and existing functionality.
 
-**Checking Status:**
+**Status Aggregation:**
 
-```bash
-# View aggregate phase status
-smaqit status
-
-# Shows per-phase spec counts:
-Develop: 18 implemented, 2 failed
-Deploy: 15 deployed, 3 draft
-Validate: 12 validated, 5 draft
-```
-
-CLI aggregates status by scanning all spec frontmatter. No centralized state file.
+CLI aggregates phase status by scanning all spec frontmatter, showing per-phase spec counts. No centralized state file is maintained.
 
 ---
 
