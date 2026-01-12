@@ -1,6 +1,6 @@
 # Validation Agent Should Generate Executable Test Artifacts
 
-**Status:** Not Started  
+**Status:** In Progress  
 **Created:** 2026-01-11  
 **Priority:** High (Release Blocker)  
 **Related:** Issue 12 from Task 059 (E2E Regression Testing)
@@ -29,13 +29,13 @@ Validation agent performs manual verification and generates validation report bu
 
 ## Acceptance Criteria
 
-- [ ] Update `agents/smaqit.validation.agent.md` Output section to include test artifacts
-- [ ] Update agent directives: "Generate executable test files from Coverage specs"
-- [ ] Directive: "Use test framework specified in Stack spec (pytest, unittest, etc.)"
-- [ ] Directive: "Generate tests in `tests/` directory with proper structure"
-- [ ] Directive: "Generate test framework configuration (`pytest.ini`, `unittest.cfg`, etc.)"
-- [ ] Directive: "Generate CI/CD workflow file in `.github/workflows/validation.yml`"
-- [ ] Update PHASES.md Validate phase completion criteria to include test artifact generation
+- [x] Update `agents/smaqit.validation.agent.md` Output section to include test artifacts
+- [x] Update agent directives: "Generate executable test files from Coverage specs"
+- [x] Directive: "Use test framework specified in Stack spec (pytest, unittest, etc.)"
+- [x] Directive: "Generate tests in `tests/` directory with proper structure"
+- [x] Directive: "Generate test framework configuration (`pytest.ini`, `unittest.cfg`, etc.)"
+- [x] Directive: "Generate CI/CD workflow file in `.github/workflows/validation.yml`"
+- [x] Update PHASES.md Validate phase completion criteria to include test artifact generation
 - [ ] Validation: Re-run validation phase with Mario + Luigi test case
 - [ ] Validation: Verify `tests/*.py` files exist and are executable
 - [ ] Validation: Verify test framework configuration file exists

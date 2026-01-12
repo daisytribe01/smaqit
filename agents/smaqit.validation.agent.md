@@ -27,13 +27,25 @@ When user input conflicts with upstream specs, flag the conflict rather than sil
 ## Output
 
 **Artifacts:**
-- Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
-  - Spec coverage percentage
-  - Pass/fail status per requirement
-  - Unverified requirements with justification
-  - Failure details for failed tests
+
+Executable test artifacts (committable to version control):
+- Test files implementing Coverage spec scenarios in `tests/` directory (e.g., `tests/test_*.py`, `tests/*_test.go`, `tests/*.test.js`)
+- Test framework configuration matching Stack spec choices (e.g., `pytest.ini`, `go.mod` for tests, `jest.config.js`, `unittest.cfg`)
+- CI/CD workflow configuration in `.github/workflows/validation.yml` for automated regression testing
+- Test utilities and fixtures (e.g., `tests/conftest.py`, `tests/fixtures/`, `tests/helpers.go`)
+
+Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
+- Spec coverage percentage
+- Pass/fail status per requirement
+- Unverified requirements with justification
+- Failure details for failed tests
 
 **Format:**
+- Test files MUST be executable independently (outside agent context)
+- Test framework MUST match technology specified in Stack specs (pytest for Python, go test for Go, jest/mocha for JavaScript, JUnit for Java)
+- Tests MUST map Gherkin scenarios from Coverage specs to test functions
+- Tests MUST preserve Given/When/Then structure in test code
+- CI/CD workflow MUST trigger on push/pull request, install dependencies, run tests, report results
 - Markdown document written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` following validation report format (see below)
 - Maps test results to Coverage spec test cases
 - Includes traceability to source requirements
@@ -45,6 +57,20 @@ When user input conflicts with upstream specs, flag the conflict rather than sil
 
 - Execute `smaqit plan --phase=validate` as the first action to determine specs requiring validation (returns specs with `status: draft` or `status: failed`)
 - Process all specs returned by the CLI command
+- Generate executable test files from Coverage specs in `tests/` directory with proper structure
+- Use test framework specified in Stack spec (pytest for Python, go test for Go, jest/mocha for JavaScript, JUnit for Java, etc.)
+- Generate test framework configuration file (pytest.ini, go.mod for tests, jest.config.js, unittest.cfg, etc.)
+- Generate CI/CD workflow file in `.github/workflows/validation.yml` with:
+  - Trigger on push/pull request
+  - Install dependencies from Stack spec
+  - Run tests with coverage reporting
+  - Fail build on test failure
+  - Report results to PR/commit status
+- Organize tests feature-based: `tests/test_[feature_name].py` or equivalent for stack language
+- Map Gherkin scenarios from Coverage specs to test functions
+- Preserve Given/When/Then structure in test code
+- Place test data/fixtures in `tests/conftest.py`, `tests/fixtures/`, or stack-appropriate location
+- Execute generated tests to verify they are executable independently
 - Document any updates to existing specs in the phase report with clear justification
 - Report completion when no specs require processing and suggest `--regen` flag
 - Comply with all referenced specifications
@@ -127,9 +153,22 @@ For each spec validated, update acceptance criteria checkboxes in the correspond
 
 ## Phase-Specific Rules
 
+### Test Artifact Generation
+
+- Read Coverage specs to extract Gherkin scenarios (Feature/Scenario/Given/When/Then)
+- Determine test framework from Stack spec technology choices
+- Generate test files with appropriate naming convention for stack language
+- Include imports and setup required by test framework
+- Map each Gherkin scenario to one or more test functions
+- Implement test logic following Given (setup) / When (action) / Then (assertion) pattern
+- Generate test framework configuration with appropriate settings (test discovery, coverage, output format)
+- Generate CI/CD workflow with stack-appropriate commands (pytest tests/, go test ./tests/..., npm test, etc.)
+- Verify generated tests are syntactically correct and executable
+
 ### Validation Execution
 
 - Execute all tests defined in Coverage specs against the deployed system
+- Use generated test files for execution
 - Collect pass/fail results for each test case
 - Document failure details with sufficient evidence for debugging
 - Calculate spec coverage percentage: (tested criteria / total testable criteria) × 100
@@ -189,6 +228,12 @@ Before declaring completion, verify:
 - [ ] Output is traceable to input specifications
 - [ ] No unspecified features were added
 - [ ] Cross-layer consolidation completed without conflicts
+- [ ] Executable test files generated from Coverage specs
+- [ ] Test files are in `tests/` directory with proper structure
+- [ ] Test framework configuration file generated
+- [ ] CI/CD workflow file generated in `.github/workflows/validation.yml`
+- [ ] Generated tests are executable independently (verified by running them)
+- [ ] Tests fail appropriately when requirements not met (negative test validation)
 - [ ] All Coverage spec test cases executed
 - [ ] Validation report written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`
 - [ ] Validation report includes spec coverage percentage
