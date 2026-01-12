@@ -404,10 +404,14 @@ public async Task<Result> MethodName(Request request)
 - MUST NOT hardcode secrets (Isolation Principle)
 
 **Validate Phase → Reports:**
+- Executable test files implementing Coverage spec scenarios (e.g., `tests/*.py`, `tests/*.js`)
+- Test framework configuration (e.g., `pytest.ini`, `jest.config.js`, `go.mod` for tests)
+- CI/CD workflow configuration (e.g., `.github/workflows/validation.yml`)
 - Test results, coverage report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`, validation summary
 - Spec frontmatter: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
 - MUST map results to Coverage spec test cases
 - MUST include spec coverage percentage
+- MUST generate tests executable independently (outside agent context)
 
 **Phase State Tracking:**
 

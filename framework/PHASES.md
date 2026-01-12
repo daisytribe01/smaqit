@@ -215,15 +215,25 @@ If prompt has content, agents interpret free-style requirements and request clar
    e. Flags untestable criteria
 
 2. Validation agent:
-   a. Executes tests against deployed system
-   b. Collects pass/fail results per test case
-   c. Calculates spec coverage percentage
-   d. Produces validation report
+   a. Generates executable test files from Coverage specs
+   b. Generates test framework configuration
+   c. Generates CI/CD workflow configuration
+   d. Executes generated tests against deployed system
+   e. Collects pass/fail results per test case
+   f. Calculates spec coverage percentage
+   g. Produces validation report
 ```
 
 **Environment:** Same target environment as Deploy phase
 
-**Output:** Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
+**Output:** 
+
+Executable test artifacts committable to version control:
+- Test files implementing Coverage spec scenarios (e.g., `tests/*.py`)
+- Test framework configuration (e.g., `pytest.ini`, `unittest.cfg`)
+- CI/CD workflow file (e.g., `.github/workflows/validation.yml`)
+
+Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
 - Spec coverage percentage
 - Pass/fail status per requirement
 - Unverified requirements with justification
@@ -240,6 +250,9 @@ If prompt has content, agents interpret free-style requirements and request clar
 **Completion Criteria:**
 - [ ] Coverage specs produced with all testable criteria mapped
 - [ ] All coverage specs have `status: validated`
+- [ ] Executable test files generated from Coverage specs
+- [ ] Test framework configuration generated
+- [ ] CI/CD workflow configuration generated
 - [ ] Tests executed against deployed system
 - [ ] Validation report written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`
 - [ ] Spec coverage percentage calculated
