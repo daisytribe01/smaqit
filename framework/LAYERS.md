@@ -4,270 +4,106 @@ Layers are independent specification manifests that together form a coherent app
 
 ## Layer Independence
 
-**Each layer's prompt file is the sole source of requirements for that layer.**
-
-Each layer:
-- Receives requirements from its prompt file (`.github/prompts/smaqit.[layer].prompt.md`)
-- Can be selected or swapped independently
-- Must be coherent with adjacent layers
-- Does not derive requirements from upstream layers
+**Prompt-driven requirements:** Each layer's prompt file serves as the sole source of requirements for that layer. Layers can be selected or swapped independently while maintaining coherence with adjacent layers. Upstream layers don't derive requirements for downstream layers.
 
 ## Upstream References
 
-Layers reference upstream specifications for these purposes:
-
-| Purpose | Description |
-|---------|-------------|
-| **Coherence** | Implementation agents consolidate specs from multiple layers before execution. References ensure specs are compatible. |
-| **Traceability** | Coverage maps requirements through all layers to ensure nothing is missed. |
-
-Coherence validation happens at the end of each phase, where the implementation agent consolidates the required specs before execution.
+**Purpose of references:** Layers reference upstream specifications for coherence (ensuring compatibility across layers) and traceability (enabling coverage to map requirements without gaps). Implementation agents consolidate specifications from multiple layers before execution, validating coherence at phase boundaries.
 
 ## Layer Order
 
-Layers are worked through in order within each phase:
+**Sequential workflow within phases:** Layers are worked through in order within each phase. Phase 1 progresses Business through Stack. Phase 2 handles Infrastructure reading all Phase 1 specs for context. Phase 3 handles Coverage reading all specs.
 
-**Phase 1 (Develop):** Business → Functional → Stack
-
-**Phase 2 (Deploy):** Infrastructure (reads all Phase 1 specs for context)
-
-**Phase 3 (Validate):** Coverage (reads all specs)
-
-The order provides context accumulation, not requirement derivation:
-- **Phase 1 layers** (Business through Stack): each provides cumulative context for subsequent layers
-- **Infrastructure** (Phase 2): uses all Phase 1 specs as coherence context
-- **Coverage** (Phase 3): validates against all layers
+**Context accumulation:** The order provides context accumulation rather than requirement derivation. Phase 1 layers each provide cumulative context for subsequent layers. Infrastructure uses all Phase 1 specs as coherence context. Coverage validates against all layers.
 
 ## Layer Definitions
 
 ### Business — Why?
 
-The Business layer captures the intent, value, and goals of what is being built.
+**Purpose:** The Business layer captures intent, value, and goals justifying the work.
 
-**Purpose:** Define use cases, actors, and measurable outcomes that justify the work.
+**Content:** Use cases, actors, measurable outcomes defining success.
 
-**Input:** User requirements (stakeholder goals, use cases, success criteria)
+**Input:** User requirements covering stakeholder goals, use cases, and success criteria.
 
-**Context:** None (Business is the first layer)
+**Context:** None (Business is the first layer).
 
-**Directives:**
-
-**Business specs MUST:**
-- Identify all actors and their goals
-- Define measurable success metrics for each use case
-- Include preconditions and postconditions
-- Describe main and alternative flows in business terms
-
-**Business specs MUST NOT:**
-- Mention specific technologies, frameworks, or libraries
-- Include implementation details or technical solutions
-- Define data structures or API contracts
-- Reference deployment or infrastructure concerns
-
-**System Actor:**
-
-When stakeholders have requirements about system properties (availability, auditability, accessibility), use the **System** actor:
-
-| Actor | Description | Goals |
-|-------|-------------|-------|
-| System | The application as a whole | [System-level properties stakeholders require] |
-
-System actor specs remain business-level (stakeholder-driven) and do not prescribe technical solutions.
+**Scope:** Business concerns only—no technologies, implementation details, data structures, API contracts, deployment concerns, or infrastructure references. System actor captures stakeholder requirements about system properties (availability, auditability, accessibility) while remaining at business level without prescribing technical solutions.
 
 ---
 
 ### Functional — What?
 
-The Functional layer defines the behaviors, contracts, and data models required to fulfill business goals.
+**Purpose:** The Functional layer defines behaviors, contracts, and data models required to fulfill business goals.
 
-**Purpose:** Translate user experience requirements into precise behavioral specifications.
+**Content:** User flows, data models, API contracts, state transitions.
 
-**Input:** User experience requirements (experience shape, behaviors, interactions)
+**Input:** User experience requirements covering experience shape, behaviors, and interactions.
 
-**Context:** Business specs (for coherence and traceability)
+**Context:** Business specifications for coherence and traceability.
 
-**Directives:**
+**Scope:** Behavioral specifications only—no technology choices, deployment concerns, performance benchmarks, or implementation patterns. References Business specs using Implements (1:1 feature mapping) or Enables (1:many foundation mapping) with justification when foundation specs lack Business references.
 
-**Functional specs MUST:**
-- Define user flows that implement business use cases
-- Specify data models with attributes and relationships
-- Define API contracts (inputs, outputs, error conditions)
-- Include state transitions where applicable
-- Reference business specs for traceability using Implements (1:1 feature) or Enables (1:many foundation)
-- Include justification when foundation spec has no Business references
-
-**Functional specs MUST NOT:**
-- Specify technology choices (languages, frameworks, databases)
-- Include deployment or infrastructure concerns
-- Define performance benchmarks (those belong in Infrastructure)
-- Prescribe implementation patterns
-
-**Foundation vs Feature Specs:**
-
-Functional specs come in two categories:
-
-| Type | Purpose | Business Reference |
-|------|---------|--------------------|
-| **Feature specs** | Implement a specific business use case | 1:1 mapping (Implements) |
-| **Foundation specs** | Enable multiple business use cases | 1:many mapping (Enables) |
-
-Foundation specs (shared components, cross-cutting concerns, common contracts) are legitimate engineering artifacts that serve multiple business goals.
-
-**Foundation spec rules:**
-- SHOULD reference all Business specs they enable
-- MUST flag absence of Business references with justification
-
-**Note:** Orphaned foundations (no Business references, no justification) indicate scope creep.
+**Foundation distinction:** Feature specs implement specific business use cases (1:1 mapping). Foundation specs enable multiple business use cases (1:many mapping), serving as legitimate engineering artifacts for shared components and cross-cutting concerns. Orphaned foundations (no Business references, no justification) indicate scope creep.
 
 ---
 
 ### Stack — With what?
 
-The Stack layer selects and justifies the technologies used to implement functional requirements.
+**Purpose:** The Stack layer selects and justifies technologies used to implement functional requirements.
 
-**Purpose:** Choose languages, frameworks, libraries, and tools that can deliver the specified behaviors.
+**Content:** Language choices with versions, framework selections, library specifications, tool rationale, build tooling, development environment definitions.
 
-**Input:** User technology preferences (languages, frameworks, constraints, team expertise)
+**Input:** User technology preferences covering languages, frameworks, constraints, and team expertise.
 
-**Context:** Business and Functional specs (for coherence and traceability)
+**Context:** Business and Functional specifications for coherence and traceability.
 
-**Directives:**
+**Scope:** Technology selections only—no code examples, implementation patterns, architecture code blocks, deployment topology, compute/networking/scaling decisions, cloud providers, or hosting platforms. References Functional specs using Enables (foundation serving multiple) or direct reference (feature serving one) with justification when foundation specs lack Functional references. Consistency with Functional specs validated at implementation.
 
-**Stack specs MUST:**
-- Document technology choices with rationale
-- Define language versions and framework versions
-- Specify libraries and their purposes
-- Include build tools and development environment setup
-- Be consistent with Functional specs (validated at implementation)
-- Reference Functional specs using Enables (foundation serving multiple) or direct reference (feature serving one)
-- Include justification when foundation spec has no Functional references
-
-**Stack specs MUST NOT:**
-- Include code examples, implementation patterns, or architecture code blocks
-- Define deployment topology or infrastructure
-- Include compute, networking, or scaling decisions
-- Specify cloud providers or hosting platforms
-- Contradict functional requirements
-
-**Foundation vs Feature Specs:**
-
-Stack specs come in two categories:
-
-| Type | Purpose | Functional Reference |
-|------|---------|--------------------|
-| **Feature specs** | Technology choices for a specific feature | 1:1 mapping (Enables) |
-| **Foundation specs** | Base technologies enabling multiple features | 1:many mapping (Enables) |
-
-Foundation specs (base language environments, shared build tools, common dependencies) are legitimate engineering artifacts that serve multiple functional requirements.
-
-**Foundation spec rules:**
-- SHOULD reference all Functional specs they enable
-- MUST flag absence of Functional references with justification
-
-**Note:** Orphaned foundations (no Functional references, no justification) indicate scope creep.
+**Foundation distinction:** Feature specs cover technology choices for specific features (1:1 mapping). Foundation specs cover base technologies enabling multiple features (1:many mapping), serving as legitimate engineering artifacts like base language environments and shared dependencies. Orphaned foundations indicate scope creep.
 
 ---
 
 ### Infrastructure — Where?
 
-The Infrastructure layer defines where and how the application runs in production.
+**Purpose:** The Infrastructure layer defines where and how the application runs in production.
 
-**Purpose:** Specify compute, networking, observability, and operational concerns.
+**Content:** Compute resources, networking topology, security boundaries, observability (logging, metrics, tracing), scaling policies, resource limits, secrets management approach.
 
-**Input:** User deployment requirements (environment, hosting, scaling, constraints)
+**Input:** User deployment requirements covering environment, hosting, scaling, and constraints.
 
-**Context:** Phase 1 specs (Business, Functional, Stack) for coherence and traceability
+**Context:** Phase 1 specifications (Business, Functional, Stack) for coherence and traceability.
 
-**Directives:**
+**Scope:** Operational concerns only—no business logic redefinitions, technology choice overrides, application code, configurations, or test cases. References Phase 1 specs using Enables (foundation serving multiple) or direct reference (feature serving one) with justification when foundation specs lack Phase 1 references. Consistency with Phase 1 specs validated at implementation.
 
-**Infrastructure specs MUST:**
-- Define compute resources (containers, serverless, VMs)
-- Specify networking topology and security boundaries
-- Include observability (logging, metrics, tracing)
-- Define scaling policies and resource limits
-- Specify secrets management approach
-- Be consistent with Phase 1 specs regarding requirements and runtime constraints (validated at implementation)
-- Reference Phase 1 specs using Enables (foundation serving multiple) or direct reference (feature serving one)
-- Include justification when foundation spec has no Phase 1 references
-
-**Infrastructure specs MUST NOT:**
-- Redefine business logic or functional behaviors
-- Override technology choices from Stack layer
-- Include application code or configurations
-- Define test cases (those belong in Coverage)
-
-**Foundation vs Feature Specs:**
-
-Infrastructure specs come in two categories:
-
-| Type | Purpose | Phase 1 Reference |
-|------|---------|--------------------|
-| **Feature specs** | Infrastructure for a specific feature/component | 1:1 mapping (Enables) |
-| **Foundation specs** | Base infrastructure enabling multiple features | 1:many mapping (Enables) |
-
-Foundation specs (base networking, shared security policies, common observability configuration) are legitimate operational artifacts that serve multiple application components.
-
-**Foundation spec rules:**
-- SHOULD reference all Phase 1 specs (Business, Functional, Stack) they enable
-- MUST flag absence of Phase 1 references with justification
-
-**Note:** Orphaned foundations (no Phase 1 references, no justification) indicate scope creep.
+**Foundation distinction:** Feature specs cover infrastructure for specific features/components (1:1 mapping). Foundation specs cover base infrastructure enabling multiple features (1:many mapping), serving as legitimate operational artifacts like base networking and shared observability. Orphaned foundations indicate scope creep.
 
 ---
 
 ### Coverage — What's verified?
 
-The Coverage layer ensures all requirements are testable and traceable. It reads from all upstream layers for traceability and coherence.
+**Purpose:** The Coverage layer ensures all requirements are testable and traceable.
 
-**Purpose:** Enumerate every acceptance criterion and map it to a verification test.
+**Content:** Acceptance criterion mappings, test case definitions, requirement-to-test-to-outcome maps, untestable requirement flags, integration/E2E/acceptance test definitions, specification coverage percentages.
 
-**Input:** User test requirements (test scope, test environment, integration points, acceptance thresholds)
+**Input:** User test requirements covering test scope, test environment, integration points, and acceptance thresholds.
 
-**Context:** All layer specs (Business, Functional, Stack, Infrastructure) — source of upstream acceptance criteria to verify
+**Context:** All layer specifications (Business, Functional, Stack, Infrastructure) as source of upstream acceptance criteria to verify.
 
-**Directives:**
-
-**Coverage specs MUST:**
-- Reference every acceptance criterion from upstream specs by ID
-- Define a test case for each testable requirement
-- Map: Requirement ID → Test Case → Expected Outcome
-- Flag untestable requirements explicitly
-- Include integration, E2E, and acceptance test definitions
-- Report spec coverage (% of requirements with corresponding tests)
-
-**Coverage specs MUST NOT:**
-- Add acceptance criteria not present in upstream specs
-- Skip upstream acceptance criteria without justification
-- Modify or reinterpret upstream acceptance criteria
-- Define unit tests (those are implementation details)
+**Scope:** Verification definitions only—no new acceptance criteria beyond upstream specs, no skipped criteria without justification, no modified or reinterpreted upstream criteria, no unit tests (those are implementation details).
 
 ## Dependency Graph
 
-```
-                    ┌─────────────────────────────────────┐
-                    │              Coverage               │
-                    │          (What's verified?)         │
-                    └─────────────────────────────────────┘
-                        ↑         ↑         ↑         ↑
-          ┌─────────────┘         │         │         └─────────────┐
-          │                       │         │                       │
-          │                       │         │                       │
-    ┌─────┴─────┐           ┌─────┴─────┐   │                 ┌─────┴─────┐
-    │  Business │           │ Functional│   │                 │  Infra    │
-    │   (Why?)  │──────────→│  (What?)  │───┼─────────╮       │ (Where?)  │
-    └─────┬─────┘           └─────┬─────┘   │         │       └───────────┘
-          │                       │         │         │             ↑
-          │                       │         │         │             │
-          │                 ┌─────┴─────┐   │         │             │
-          │                 │   Stack   │───┘         │             │
-          │                 │(With what)│─────────────┼─────────────┘
-          │                 └───────────┘             │
-          │                                           │
-          └───────────────────────────────────────────┘
-```
+Layers connect through references forming a dependency structure supporting traceability and coherence:
 
-**Phase 1 (Develop):** Business → Functional → Stack (linear)
+- Coverage reads all layers (Business, Functional, Stack, Infrastructure)
+- Infrastructure reads Phase 1 layers (Business, Functional, Stack)  
+- Stack reads Business and Functional
+- Functional reads Business
+- Business reads prompt file only
 
-**Phase 2 (Deploy):** Infrastructure reads all Phase 1 specs (cross-cutting)
+Phase 1 (Develop) progresses linearly: Business → Functional → Stack.
 
-**Phase 3 (Validate):** Coverage reads all specs including Infrastructure (cross-cutting)
+Phase 2 (Deploy) adds Infrastructure reading all Phase 1 specs cross-cutting.
+
+Phase 3 (Validate) adds Coverage reading all specs cross-cutting.

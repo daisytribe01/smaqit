@@ -18,55 +18,31 @@ Specifications are not documentation—they are the source of truth. Implementat
 
 ### Traceability Across Layers
 
-**Every output MUST trace to a prompt file.**
-
-- Each layer receives requirements from its prompt file
-- Upstream layers provide context for coherence, not requirements
-- Code references specs
-- Tests reference requirements
+**Traceable outputs:** Every output traces to a prompt file. Each layer receives requirements from its prompt file. Upstream layers provide context for coherence, not requirements. Code references specifications. Tests reference requirements.
 
 ### Layer Independence
 
-**Each layer's prompt file is the sole source of requirements for that layer.**
-
-Each layer has its own prompt file where users input requirements. Upstream layers provide context for coherence, not requirements. This ensures that user intent guides every layer without false derivation chains.
+**Prompt-driven layers:** Each layer's prompt file serves as the sole source of requirements for that layer. Upstream layers provide context for coherence without dictating content. This ensures user intent guides every layer without false derivation chains.
 
 ### Single Source of Truth
 
-**Each piece of information should exist in exactly one place.**
-
-When information is needed in multiple contexts, reference the source rather than duplicate. Foundation specs contain shared requirements that multiple feature specs depend on. This prevents conflicting sources of truth, reduces maintenance burden, and ensures consistency across specifications.
-
-- **Agents MUST NOT** duplicate information from existing specs—use Foundation Reference for same-layer or Implements/Enables for upstream
-- **Agents SHOULD** update existing specs when extending a concept, create new specs only for distinct concepts
-- **Agents SHOULD** reference foundation specs for shared requirements using Foundation Reference section
+**Information uniqueness:** Each piece of information exists in exactly one place. When information is needed in multiple contexts, reference the source rather than duplicate. Foundation specs contain shared requirements that multiple feature specs depend on. This prevents conflicting sources of truth, reduces maintenance burden, and ensures consistency across specifications.
 
 ### Specification Coverage
 
-**Every requirement MUST be verified through traceable test coverage.**
-
-Traceability enables complete specification coverage: the Coverage layer traces requirements through all upstream specs to ensure nothing is missed. Untested requirements are explicit gaps, not silent omissions.
+**Verified requirements:** Every requirement receives verification through traceable test coverage. Traceability enables complete specification coverage: the Coverage layer traces requirements through all upstream specs to ensure nothing is missed. Untested requirements become explicit gaps, not silent omissions.
 
 ### Self-Validating Agents
 
-**Agents validate their own output before declaring completion.**
-
-Agents are not fire-and-forget. Each agent has completion criteria and MUST verify them before finishing. This shifts quality assurance left—into the agent itself, not a separate review step.
+**Agent self-checking:** Agents validate their own output before declaring completion. Each agent has completion criteria and verifies them before finishing. This shifts quality assurance left—into the agent itself, not a separate review step.
 
 ### Bounded Agents
 
-**Agents execute only their designated layer or phase.**
-
-Each agent has a single responsibility. Agents decline out-of-scope requests with clear redirection to the appropriate agent. This enforces separation of concerns and prevents scope creep across workflow boundaries.
+**Single-responsibility execution:** Agents execute only their designated layer or phase. Each agent has a single responsibility. Agents decline out-of-scope requests with clear redirection to the appropriate agent. This enforces separation of concerns and prevents scope creep across workflow boundaries.
 
 ### Template-Constrained Output
 
-**Templates are cognitive scaffolds, not suggestions.**
-
-Templates define the exact structure agents MUST produce. This ensures:
-- Consistent output across runs
-- Predictable input for downstream consumers
-- Reduced LLM variance
+**Templates as scaffolds:** Templates are cognitive scaffolds, not suggestions. Templates define the exact structure agents produce. This ensures consistent output across runs, predictable input for downstream consumers, and reduced LLM variance.
 
 ### Accept Mutability, Validate Behavior
 

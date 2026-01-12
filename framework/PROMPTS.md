@@ -2,140 +2,59 @@
 
 Prompts are the user-facing interface for smaqit workflows. They capture requirements as input records and invoke agents to generate specifications.
 
-**Key Principles:**
+## Key Principles
 
-- **Prompts are input records** — Capture user requirements for reproducibility and auditability
-- **Free-style natural language** — Users write in their own words, agents interpret
-- **HTML comment examples** — `<!-- Example: ... -->` provide guidance without rigid enforcement
-- **Single manifest per layer** — One prompt file accumulates all requirements for a layer (unlike specs which are one-per-concept)
+**Input records:** Prompts capture user requirements for reproducibility and auditability.
 
-**Structure:**
+**Natural language:** Free-style expression in users' own words with agents interpreting content.
 
-- YAML frontmatter: `name`, `description`, `agent`
-- Requirement sections with layer-specific sub-sections
-- `<!-- Example: ... -->` comments for guidance (agents MUST ignore these)
-- Free-style user content in natural language
+**Example guidance:** HTML comment examples provide guidance without rigid enforcement.
 
-**Prompt types:**
+**Single manifest:** One prompt file accumulates all requirements for a layer (unlike specs which are one-per-concept).
 
-- **Layer prompts** (5) — Capture requirements for specification layers (business, functional, stack, infrastructure, coverage)
-- **Phase prompts** (3) — Trigger phase implementation agents
+**Structure:** YAML frontmatter (name, description, agent) plus requirement sections with layer-specific sub-sections plus comment examples for guidance plus free-style user content in natural language.
+
+**Prompt varieties:** Layer prompts (5) capture requirements for specification layers (business, functional, stack, infrastructure, coverage). Phase prompts (3) trigger phase implementation agents.
 
 ## Prompts as Input Records
 
-**Prompts are versioned input records capturing user requirements at each layer.**
-
-Filled prompts should be committed to version control alongside specs. When requirements change, users edit prompt files and regenerate specs.
+**Versioned requirements:** Prompts are versioned input records capturing user requirements at each layer. Filled prompts should be committed to version control alongside specs. When requirements change, users edit prompt files and regenerate specs.
 
 ## Prompt Structure
 
-### Location
+**Natural language with suggested organization:** Prompts use GitHub Copilot prompt format with frontmatter specifying name, description, and agent. Free-style content follows suggested structure provided by templates.
 
-Prompts live in `.github/prompts/`. This location enables `/smaqit.[layer]` slash command invocation.
+**Single manifest consolidation:** Unlike specifications (one file per concept), prompts are single manifest files capturing all requirements for a layer. Business prompt contains all use cases, actors, goals for the project. Functional prompt contains all behaviors, data models, contracts for the project. Stack prompt contains all technology choices and rationale for the project. As projects evolve, users add requirements to existing prompts rather than creating new prompt files. This creates a consolidated input record for the entire project at each layer.
 
-**User project structure:**
-```
-project/
-└── .github/
-    └── prompts/
-        ├── smaqit.business.prompt.md
-        ├── smaqit.functional.prompt.md
-        ├── smaqit.stack.prompt.md
-        ├── smaqit.infrastructure.prompt.md
-        ├── smaqit.coverage.prompt.md
-        ├── smaqit.development.prompt.md
-        ├── smaqit.deployment.prompt.md
-        ├── smaqit.validation.prompt.md
-        └── smaqit.orchestrate.prompt.md
-```
+**Flexible structure:** Prompts are natural language inputs, not rigidly structured forms. Templates provide suggested structure (sections, sub-sections) but users write requirements in their own words. Agents interpret and request clarification if needed.
 
-### Format
-
-**YAML Frontmatter + Free-Style Content**
-
-Prompts use GitHub Copilot prompt format with frontmatter specifying name, description, and agent. See `templates/prompts/` for structure.
-
-### Single Manifest per Layer
-
-Unlike specifications (one file per concept), prompts are **single manifest files** that capture all requirements for a layer:
-
-- **Business prompt**: All use cases, actors, goals for the project
-- **Functional prompt**: All behaviors, data models, contracts for the project
-- **Stack prompt**: All technology choices and rationale for the project
-
-As projects evolve, users add requirements to existing prompts rather than creating new prompt files. This creates a consolidated input record for the entire project at each layer.
-
-### Free-Style with Suggested Structure
-
-Prompts are **natural language inputs**, not rigidly structured forms. Templates provide suggested structure (sections, sub-sections) but users write requirements in their own words. Agents interpret and request clarification if needed.
-
-### Comment Convention for Examples
-
-**Agents MUST ignore HTML comments** (`<!-- -->`). Templates include examples wrapped in `<!-- Example: ... -->` comments for user guidance only.
+**Example convention:** Agents ignore HTML comments. Templates include examples wrapped in comment tags for user guidance only.
 
 ## Agent Interaction
 
 ### Reading Prompts
 
-Agents read prompt files from `.github/prompts/` at the start of execution:
-
-1. **Locate prompt**: Agent finds corresponding prompt file (e.g., Business Agent reads `smaqit.business.prompt.md`)
-2. **Ignore comments**: Agent strips all HTML comments before interpretation
-3. **Parse requirements**: Agent interprets free-style content per layer expectations
-4. **Validate sufficiency**: Agent checks if enough information provided
+**Prompt consumption:** Agents read prompt files at execution start, locating corresponding prompt files, stripping all HTML comments before interpretation, parsing free-style content per layer expectations, and validating sufficiency.
 
 ### Validation Pattern
 
-Agents apply **Fail-Fast on Ambiguity** when reading prompts:
-
-**If prompt empty or insufficient:**
-- Agent halts execution
-- Agent suggests what's missing using natural language guidance
-- Agent waits for user to fill prompt and re-invoke
-
-Agents guide users naturally, not with template references or error codes.
-
-**If prompt is filled sufficiently:**
-- Agent proceeds with spec generation
-- Agent uses prompt content as authoritative input
+**Sufficiency checking:** Agents apply fail-fast on ambiguity when reading prompts. If prompt empty or insufficient: agent halts execution, suggests what's missing using natural language guidance, waits for user to fill prompt and re-invoke. Agents guide users naturally, not with template references or error codes. If prompt filled sufficiently: agent proceeds with spec generation, using prompt content as authoritative input.
 
 ## Amendment Workflow
 
-When requirements change, users edit prompts and regenerate specs. Prompts are the source, specs are derived. Agents always read from `.github/prompts/`.
+**Requirement changes:** When requirements change, users edit prompts and regenerate specs. Prompts are the source, specs are derived. Agents always read from prompt files.
 
 ## Prompt Types
 
 ### Specification Prompts (Layer Prompts)
 
-Capture requirements for single specification layer:
-
-| Prompt | Layer | Captures | Invokes |
-|--------|-------|----------|---------|
-| `smaqit.business.prompt.md` | Business | Use cases, actors, goals | Business Agent |
-| `smaqit.functional.prompt.md` | Functional | Behaviors, data, contracts | Functional Agent |
-| `smaqit.stack.prompt.md` | Stack | Technologies, tools, rationale | Stack Agent |
-| `smaqit.infrastructure.prompt.md` | Infrastructure | Deployment, scaling, observability | Infrastructure Agent |
-| `smaqit.coverage.prompt.md` | Coverage | Test scope, environment, thresholds | Coverage Agent |
+**Layer-specific input:** Each prompt captures requirements for single specification layer, covering use cases and actors and goals (business), behaviors and data and contracts (functional), technologies and tools and rationale (stack), deployment and scaling and observability (infrastructure), test scope and environment and thresholds (coverage).
 
 ### Implementation Prompts
 
-Trigger single implementation agent with optional execution parameters:
-
-| Prompt | Phase | Captures | Invokes |
-|--------|-------|----------|---------|
-| `smaqit.development.prompt.md` | Development | Build options, output preferences | Development Agent |
-| `smaqit.deployment.prompt.md` | Deployment | Deployment target, verification | Deployment Agent |
-| `smaqit.validation.prompt.md` | Validation | Execution scope, failure handling | Validation Agent |
-
-Implementation prompts collect minimal runtime parameters (watch mode, verbosity, skip flags). Agents handle orchestration, validation, and error handling.
+**Phase execution parameters:** Trigger single implementation agent with optional execution parameters covering build options and output preferences (development), deployment target and verification (deployment), execution scope and failure handling (validation). Implementation prompts collect minimal runtime parameters (watch mode, verbosity, skip flags). Agents handle orchestration, validation, and error handling.
 
 ### Orchestrator Prompt
 
-Coordinates full workflow from specifications through validation:
-
-| Prompt | Captures | Invokes |
-|--------|----------|----------|
-| `smaqit.orchestrate.prompt.md` | Phase selection, pre-validation preferences, error handling | Orchestrator Agent |
-
-Orchestrator prompt collects execution parameters (which phases to run, validation preferences, error handling strategy). Orchestrator agent executes the workflow logic.
+**Workflow coordination:** Coordinates full workflow from specifications through validation, capturing phase selection, pre-validation preferences, and error handling strategy. Orchestrator prompt collects execution parameters (which phases to run, validation preferences, error handling strategy). Orchestrator agent executes the workflow logic.
 

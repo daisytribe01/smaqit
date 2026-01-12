@@ -22,229 +22,81 @@ Phases are strictly sequential. Deploy cannot begin until Develop completes. Val
 
 ### Implementation Phase Principles
 
-**Status Cascade:** Implementation agents update all specifications they reference, not just specs from their target layer.
+**Status cascade:** Implementation agents update all specifications they reference, not just specs from their target layer.
 
-When an implementation agent processes work:
-1. Identifies specs via `smaqit plan --phase=[PHASE]` (returns target layer specs)
-2. References upstream specs for coherence/context
-3. Updates frontmatter in ALL referenced specs to reflect phase completion
+**Reference-based updates:** When an implementation agent processes work, it identifies target specs, references upstream specs for coherence/context, and updates frontmatter in all referenced specs to reflect phase completion.
 
-**Rationale:** If an implementation agent reads a specification for implementation context, that specification has been implemented/deployed/validated in that phase. Status must reflect reality for accurate lifecycle tracking.
+**Rationale:** If an implementation agent reads a specification for implementation context, that specification has been implemented/deployed/validated in that phase. Status reflects reality for accurate lifecycle tracking.
 
 ## Phase Definitions
 
 ### Develop — Build a Working Application
 
-The Develop phase transforms user requirements into a working, tested application running in an isolated environment.
+**Purpose:** The Develop phase transforms user requirements into a working, tested application running in an isolated environment.
 
-**Specification Agents:**
-| Agent | Layer | User Input | Context | Output |
-|-------|-------|------------|---------|--------|
-| `smaqit.business` | Business | Stakeholder goals | None | `specs/business/*.md` |
-| `smaqit.functional` | Functional | Experience shape | Business specs | `specs/functional/*.md` |
-| `smaqit.stack` | Stack | Technology preferences | Business and Functional specs | `specs/stack/*.md` |
+**Specification agents:** Business agent translates stakeholder goals into business specifications. Functional agent translates experience shape into functional specifications. Stack agent translates technology preferences into stack specifications.
 
-**Implementation Agent:** `smaqit.development`
+**Implementation agent:** Development agent consolidates specifications, generates application code and tests, builds the application, runs it in isolation, executes tests, and verifies behavior matches specifications.
 
-**Pre-Run Validation:**
+**Pre-run validation:** Before starting, the Development agent validates all required prompt files contain content. If any prompt is empty or insufficient, agent halts and guides user to fill the specific prompt with needed requirements.
 
-Before starting, the Development agent validates all required prompt files are filled:
+**Workflow:** Business agent produces specifications. Functional agent produces specifications. Stack agent produces specifications. Development agent consolidates specs (coherence check, conflict detection), generates code and tests, builds, runs in isolated environment, executes tests, verifies specifications.
 
-- `.github/prompts/smaqit.business.prompt.md` has content
-- `.github/prompts/smaqit.functional.prompt.md` has content
-- `.github/prompts/smaqit.stack.prompt.md` has content
+**Environment:** Implicit—local developer machine or agent runner.
 
-If any prompt is empty or insufficient, agent halts and guides user: "Please fill [prompt file] with your [layer] requirements before starting development."
+**Output:** Working, tested application in isolated environment.
 
-**Workflow:**
-```
-1. Business agent produces business specifications
-2. Functional agent produces functional specifications
-3. Stack agent produces stack specifications
-4. Development agent:
-   a. Consolidates specs (coherence check, conflict detection)
-   b. Generates application code
-   c. Generates unit tests
-   d. Compiles/builds application
-   e. Runs application in isolated environment
-   f. Executes unit tests
-   g. Verifies application works as specified
-```
+**Failure handling:** Iterate on code/test failures up to retry threshold. Document failure reasons at each attempt. Escalate to human review when threshold exceeded.
 
-**Environment:** Implicit — local developer machine or agent runner (e.g., GitHub Actions runner)
-
-**Output:** Working, tested application in isolated environment
-
-**Failure Handling:**
-- Iterate on code/test failures up to retry threshold
-- Document failure reasons at each attempt
-- Escalate to human review when threshold exceeded
-
-**Completion Criteria:**
-- [ ] All three layer specs produced and complete (Business, Functional, Stack)
-- [ ] All specs have `status: implemented` or higher
-- [ ] Code generated and compiles without errors
-- [ ] Unit tests pass
-- [ ] Application runs successfully in isolated environment
-- [ ] Behavior matches spec acceptance criteria
-- [ ] README includes build, test, and run instructions
-- [ ] Development report written to `.smaqit/reports/development-phase-report-YYYY-MM-DD.md`
-- [ ] Spec frontmatter updated: `status: implemented`, `implemented: [ISO8601_TIMESTAMP]`
-- [ ] Acceptance criteria checkboxes updated in Business, Functional, Stack specs: `[ ]` → `[x]` or `[!]`
+**Completion criteria:** All three layer specs produced and complete (Business, Functional, Stack). All specs have implemented status or higher. Code generated and compiles without errors. Unit tests pass. Application runs successfully in isolated environment. Behavior matches spec acceptance criteria. README includes build, test, and run instructions. Development report written. Spec frontmatter updated with implementation status and timestamp. Acceptance criteria checkboxes updated in Business, Functional, Stack specs indicating satisfaction or failure.
 
 ---
 
 ### Deploy — Run in Target Environment
 
-The Deploy phase transforms a working application into a running system in a target environment.
+**Purpose:** The Deploy phase transforms a working application into a running system in a target environment.
 
-**Specification Agent:**
-| Agent | Layer | User Input | Context | Output |
-|-------|-------|------------|---------|--------|
-| `smaqit.infrastructure` | Infrastructure | Deployment requirements | Phase 1 specs | `specs/infrastructure/*.md` |
+**Specification agent:** Infrastructure agent translates deployment requirements into infrastructure specifications using all Phase 1 specs as context.
 
-**Implementation Agent:** `smaqit.deployment`
+**Implementation agent:** Deployment agent consolidates specifications, generates Infrastructure as Code with reference-only secrets per Isolation Principle, triggers trusted execution with environment parameter, receives outcome, and verifies system health.
 
-**Pre-Run Validation:**
+**Pre-run validation:** Before starting, check infrastructure prompt for content beyond template structure. If empty or only containing comments, halt with natural language guidance. If content present, interpret free-style requirements and request clarification for ambiguities.
 
-Before starting, check `.github/prompts/smaqit.infrastructure.prompt.md` for content beyond template structure:
+**User input categories:** Target environment, hosting platform, service topology, resource constraints, scaling requirements, geographic constraints, budget constraints, integration points.
 
-- If empty or only contains comments: Halt with natural language guidance
-- Example guidance: "Please specify your target environment (cloud, on-premise, hybrid), hosting platform, and service topology requirements"
+**Workflow:** Infrastructure agent produces specifications. Deployment agent consolidates specs (infrastructure + stack coherence), generates Infrastructure as Code (configurations as references only), triggers trusted execution layer with environment parameter, receives outcome (success/failure, health status, endpoints), verifies system health.
 
-If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
+**Trusted execution layer:** Deployment agent operates on credential references, never values. Actual deployment happens in a trusted execution layer that resolves credential references from vault, executes deployment, runs health checks, scrubs credentials from output, and returns status with endpoints.
 
-**User Input Required:**
+**Environment:** User-specified target (dev/staging/prod).
 
-| Category | Purpose |
-|----------|----------|
-| Target environment | Where the system will run |
-| Hosting platform | Provider or infrastructure type |
-| Service topology | How the application is structured for deployment |
-| Resource constraints | Compute, memory, storage limits |
-| Scaling requirements | How the system should handle load |
-| Geographic constraints | Location or data residency requirements |
-| Budget constraints | Cost limits or optimization goals |
-| Integration points | Existing systems to connect with |
+**Output:** Running system in target environment.
 
-**Workflow:**
-```
-1. Infrastructure agent produces infrastructure specifications
-2. Deployment agent:
-   a. Consolidates specs (infrastructure + stack coherence)
-   b. Generates Infrastructure as Code (configurations as references only, per Isolation Principle)
-   c. Triggers trusted execution layer with environment parameter
-   d. Receives outcome (success/failure, health status, endpoints)
-   e. Verifies system health in target environment
-```
+**Failure handling:** Iterate on deployment failures up to retry threshold. Document failure reasons (scrubbed of sensitive data). Escalate to human review when threshold exceeded.
 
-**Trusted Execution Layer:**
-The deployment agent operates on credential references, never values. Actual deployment happens in a trusted execution layer:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Deployment Agent (no credentials in context)                │
-│                                                             │
-│  Generates: main.tf with ${secrets.AWS_ACCESS_KEY}          │
-│  Calls: deploy(environment="staging")                       │
-│                                                             │
-│         ┌───────────────────────────────────────────┐       │
-│         │ Trusted Execution Layer                   │       │
-│         │ - Resolves ${secrets.X} from vault        │       │
-│         │ - Runs: apply                             │       │
-│         │ - Runs: health checks                     │       │
-│         │ - Scrubs credentials from output          │       │
-│         └───────────────────────────────────────────┘       │
-│                                                             │
-│  Receives: { status: "success", endpoint: "https://..." }   │
-└─────────────────────────────────────────────────────────────┘
-```
-
-See [ARTIFACTS](ARTIFACTS.md) for the Isolation Principle.
-
-**Environment:** User-specified target (dev/staging/prod)
-
-**Output:** Running system in target environment
-
-**Failure Handling:**
-- Iterate on deployment failures up to retry threshold
-- Document failure reasons (scrubbed of sensitive data)
-- Escalate to human review when threshold exceeded
-
-**Completion Criteria:**
-- [ ] Infrastructure specs produced and complete
-- [ ] All infrastructure specs have `status: deployed` or higher
-- [ ] IaC generated with reference-only secrets
-- [ ] Deployment executed successfully
-- [ ] Health checks pass
-- [ ] System accessible at expected endpoints
-- [ ] Deployment report written to `.smaqit/reports/deployment-phase-report-YYYY-MM-DD.md`
-- [ ] Spec frontmatter updated: `status: deployed`, `deployed: [ISO8601_TIMESTAMP]`
-- [ ] All referenced specs updated to `status: deployed` per Status Cascade principle (Business, Functional, Stack, Infrastructure)
-- [ ] Acceptance criteria checkboxes updated in Infrastructure specs: `[ ]` → `[x]` or `[!]`
+**Completion criteria:** Infrastructure specs produced and complete. All infrastructure specs have deployed status or higher. IaC generated with reference-only secrets. Deployment executed successfully. Health checks pass. System accessible at expected endpoints. Deployment report written. Spec frontmatter updated with deployment status and timestamp. All referenced specs updated to deployed status per Status Cascade principle (Business, Functional, Stack, Infrastructure). Acceptance criteria checkboxes updated in Infrastructure specs indicating satisfaction or failure.
 
 ---
 
 ### Validate — Verify Spec Compliance
 
-The Validate phase verifies that the deployed system satisfies all specification requirements.
+**Purpose:** The Validate phase verifies that the deployed system satisfies all specification requirements.
 
-**Specification Agent:**
-| Agent | Layer | Input | Output |
-|-------|-------|-------|--------|
-| `smaqit.coverage` | Coverage | All layer specs | `specs/coverage/*.md` |
+**Specification agent:** Coverage agent reads all upstream specs (business, functional, stack, infrastructure), enumerates acceptance criteria by ID, produces test definitions, maps requirements to test cases to expected outcomes, and flags untestable criteria.
 
-**Implementation Agent:** `smaqit.validation`
+**Implementation agent:** Validation agent executes tests against deployed system, collects pass/fail results per test case, calculates spec coverage percentage, and produces validation report.
 
-**Pre-Run Validation:**
+**Pre-run validation:** Before starting, check coverage prompt for content beyond template structure. If empty or only containing comments, halt with natural language guidance. If content present, interpret free-style requirements and request clarification for ambiguities.
 
-Before starting, check `.github/prompts/smaqit.coverage.prompt.md` for content beyond template structure:
+**Workflow:** Coverage agent reads all upstream specs, enumerates all acceptance criteria by ID, produces test definitions in standard format, maps requirement IDs to test cases to expected outcomes, flags untestable criteria. Validation agent executes tests against deployed system, collects pass/fail results per test case, calculates spec coverage percentage, produces validation report.
 
-- If empty or only contains comments: Halt with natural language guidance
-- Example guidance: "Please specify the test scenarios, validation criteria, and acceptance thresholds for your application"
+**Environment:** Same target environment as Deploy phase.
 
-If prompt has content, agents interpret free-style requirements and request clarification for ambiguities.
+**Output:** Validation report containing spec coverage percentage, pass/fail status per requirement, unverified requirements with justification, and failure details for failed tests.
 
-**Workflow:**
-```
-1. Coverage agent:
-   a. Reads all upstream specs (business, functional, stack, infrastructure)
-   b. Enumerates all acceptance criteria by ID
-   c. Produces test definitions (Gherkin format)
-   d. Maps: Requirement ID → Test Case → Expected Outcome
-   e. Flags untestable criteria
+**Failure handling:** Test failures do not trigger automatic retry. Human decides next action: return to Develop (code/spec issue), return to Deploy (environment issue), investigate further, or accept with known issues.
 
-2. Validation agent:
-   a. Executes tests against deployed system
-   b. Collects pass/fail results per test case
-   c. Calculates spec coverage percentage
-   d. Produces validation report
-```
-
-**Environment:** Same target environment as Deploy phase
-
-**Output:** Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
-- Spec coverage percentage
-- Pass/fail status per requirement
-- Unverified requirements with justification
-- Failure details for failed tests
-
-**Failure Handling:**
-- Test failures do NOT trigger automatic retry
-- Human decides next action:
-  - Return to Develop (code/spec issue)
-  - Return to Deploy (environment issue)
-  - Investigate further
-  - Accept with known issues
-
-**Completion Criteria:**
-- [ ] Coverage specs produced with all testable criteria mapped
-- [ ] All coverage specs have `status: validated`
-- [ ] Tests executed against deployed system
-- [ ] Validation report written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`
-- [ ] Spec coverage percentage calculated
-- [ ] Untestable criteria documented with justification
-- [ ] Spec frontmatter updated: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
+**Completion criteria:** Coverage specs produced with all testable criteria mapped. All coverage specs have validated status. Tests executed against deployed system. Validation report written. Spec coverage percentage calculated. Untestable criteria documented with justification. Spec frontmatter updated with validation status and timestamp.
 
 ---
 
@@ -300,28 +152,15 @@ If prompt has content, agents interpret free-style requirements and request clar
 
 ### Retry Threshold
 
-Implementation agents iterate on failures up to a configurable threshold:
-
-| Phase | Default Retries | Rationale |
-|-------|-----------------|-----------|
-| Develop | 3 | Code/test fixes typically converge quickly |
-| Deploy | 2 | Infrastructure issues often need investigation |
-| Validate | 0 | Failures require human analysis |
+Implementation agents iterate on failures up to a configurable threshold. Development phase defaults to 3 retries (code/test fixes typically converge quickly). Deployment phase defaults to 2 retries (infrastructure issues often need investigation). Validation phase defaults to 0 retries (failures require human analysis).
 
 ### Failure Documentation
 
-Each failure attempt MUST document:
-- What was attempted
-- What failed (error message, scrubbed if sensitive)
-- What was changed before retry
-- Final status after threshold exceeded
+Each failure attempt documents what was attempted, what failed (error message, scrubbed if sensitive), what was changed before retry, and final status after threshold exceeded.
 
 ### Escalation
 
-When retry threshold is exceeded:
-1. Agent stops iterating
-2. Failure summary produced
-3. Human review required to proceed or abort
+When retry threshold is exceeded: agent stops iterating, failure summary produced, human review required to proceed or abort.
 
 ---
 
@@ -341,26 +180,13 @@ Coverage phase always re-runs when any upstream spec changes to ensure test cove
 
 ## Acceptance Criteria Checkboxes
 
-Each implementation agent updates checkboxes in the specs it processes as part of its self-validation process.
+**Implementation tracking:** Each implementation agent updates checkboxes in the specs it processes as part of its self-validation process. Development agent updates Business, Functional, Stack specs (implements these requirements, confirms satisfaction). Deployment agent updates Infrastructure specs (deploys to environment, confirms infrastructure requirements met).
 
-**Checkbox Responsibility by Phase:**
+**Checkbox states:** Not yet implemented/validated, satisfied (implementation complete or test passed), failed/untestable/not satisfied.
 
-| Phase | Agent | Updates Checkboxes In | Rationale |
-|-------|-------|----------------------|-----------|
-| Develop | Development | Business, Functional, Stack specs | Agent implements these requirements and confirms satisfaction |
-| Deploy | Deployment | Infrastructure specs | Agent deploys to environment and confirms infrastructure requirements met |
+**Self-validation principle:** Checkbox updates are part of the implementation agent's self-validation process, confirming that requirements were addressed during execution. This creates an audit trail showing which phase satisfied which requirements.
 
-**Checkbox States:**
-
-- `[ ]` — Not yet implemented/validated
-- `[x]` — Satisfied (implementation complete or test passed)
-- `[!]` — Failed, untestable, or not satisfied
-
-**Self-Validation Principle:**
-
-Checkbox updates are part of the implementation agent's self-validation process, confirming that requirements were addressed during execution. This creates an audit trail showing which phase satisfied which requirements.
-
-**Note:** Checkbox updates are implementation tracking, not specification modification. They reflect work done, not changes to requirements.
+**Distinction:** Checkbox updates are implementation tracking, not specification modification. They reflect work done, not changes to requirements.
 
 ---
 
@@ -368,44 +194,13 @@ Checkbox updates are part of the implementation agent's self-validation process,
 
 smaqit supports incremental workflows where specs are added and implemented iteratively.
 
-**Spec State Tracking:**
+**Spec state tracking:** Each spec carries state through phases via frontmatter: Draft → Implemented → Deployed → Validated.
 
-Each spec carries state through phases via frontmatter:
-- Draft → Implemented → Deployed → Validated
+**Determining work:** Implementation agents determine which specs to process, focusing on specs requiring processing (draft or failed status by default). Regeneration mode processes all specs regardless of status.
 
-**Determining Work:**
+**Adding features:** User adds requirements to prompt file. Spec agent generates new specs (draft status). Implementation agent processes new draft specs (existing implemented specs skipped). Tests validate new plus existing functionality.
 
-Implementation agents run `smaqit plan --phase=[PHASE]` to get paths to specs needing processing:
-
-| Mode | Command | Processes |
-|------|---------|-----------|
-| Incremental | `smaqit plan --phase=develop` | Only specs with `status: draft` or `status: failed` |
-| Regeneration | `smaqit plan --phase=develop --regen` | All specs regardless of status |
-
-**Adding Features:**
-
-```
-1. User adds requirements to prompt file
-2. Spec agent generates new specs (status: draft)
-3. Implementation agent runs `smaqit plan --phase=develop`
-4. CLI returns only new draft specs (existing implemented specs skipped)
-5. Agent processes returned paths
-6. Tests validate new + existing functionality
-```
-
-**Checking Status:**
-
-```bash
-# View aggregate phase status
-smaqit status
-
-# Shows per-phase spec counts:
-Develop: 18 implemented, 2 failed
-Deploy: 15 deployed, 3 draft
-Validate: 12 validated, 5 draft
-```
-
-CLI aggregates status by scanning all spec frontmatter. No centralized state file.
+**Checking status:** View aggregate phase status showing per-phase spec counts (implemented, failed, draft for each phase). System aggregates status by scanning all spec frontmatter. No centralized state file.
 
 ---
 

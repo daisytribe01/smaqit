@@ -1,6 +1,6 @@
 # Templates
 
-Templates define the structure that agents MUST follow when producing output. This document establishes the rules for both specification templates, agent templates and prompt templates.
+Templates define the structure that agents follow when producing output. This document establishes the principles for specification templates, agent templates, and prompt templates.
 
 ## Template Types
 
@@ -14,265 +14,62 @@ smaqit uses three types of templates:
 
 ## Placeholder Convention
 
-All templates use `[PLACEHOLDER]` format (brackets, SCREAMING_CASE) for customizable values.
-
-### Common Placeholders
-
-| Placeholder | Description | Example |
-|-------------|-------------|---------|
-| `[LAYER]` | Lowercase layer name | `business` |
-| `[LAYER_NAME]` | Title case layer name | `Business` |
-| `[LAYER_PREFIX]` | 3-letter layer code | `BUS` |
-| `[PHASE]` | Lowercase phase name | `development` |
-| `[CONCEPT]` | Concept name in requirement ID | `LOGIN` |
-| `[NNN]` | Sequential number (3 digits) | `001` |
-
-### Agent Template Placeholders
-
-**Shared placeholders:**
-
-| Placeholder | Description |
-|-------------|-------------|
-| `[UPSTREAM_SPEC_PATHS]` | Input spec paths |
-| `[USER_INPUT_DESCRIPTION]` | What user input is accepted |
-
-**Specification agent placeholders:**
-
-| Placeholder | Description |
-|-------------|-------------|
-| `[LAYER]` | Lowercase layer name (e.g., `business`) |
-| `[LAYER_NAME]` | Title case layer name (e.g., `Business`) |
-| `[LAYER_PREFIX]` | 3-letter layer code (e.g., `BUS`) |
-| `[LAYER_SPECIFIC_RULES]` | MUST/MUST NOT from LAYERS.md |
-
-**Implementation agent placeholders:**
-
-| Placeholder | Description |
-|-------------|-------------|
-| `[PHASE]` | Lowercase phase name (e.g., `development`) |
-| `[PHASE_NAME]` | Title case phase name (e.g., `Development`) |
-| `[AGENT_NAME]` | Agent display name (e.g., `Development Agent`) |
-| `[UPSTREAM_SPEC_LAYERS]` | Which specification layers this agent consumes (e.g., `Business, Functional, and Stack`) |
-| `[OUTPUT_ARTIFACTS_SUMMARY]` | Brief description of what this agent produces (e.g., `a working, tested application`) |
-| `[PHASE_SEQUENCE_NOTE]` | Phase position in workflow (e.g., `Phase 1 of 3`) |
-| `[PHASE_SPEC_LAYERS]` | Which spec layers are generated in this phase |
-| `[PHASE_SPEC_SUMMARY]` | Brief summary of specs in this phase (e.g., `business, functional, stack specs`) |
-| `[PHASE_SPECIFIC_RULES]` | MUST/MUST NOT from PHASES.md |
-| `[ROLE_DETAILS]` | Phase-specific role description |
-| `[OUTPUT_ARTIFACTS]` | What artifacts are produced |
-| `[OUTPUT_FORMAT]` | Format of output artifacts |
-| `[ADDITIONAL_COMPLETION_CRITERIA]` | Phase-specific completion checks |
+**Consistent placeholders:** All templates use bracket-wrapped SCREAMING_CASE format for customizable values. Common placeholders include layer names, phase names, prefixes, concepts, and sequential numbers. Agent templates add specialized placeholders for upstream spec paths, user input descriptions, layer-specific rules, phase-specific rules, and output formats.
 
 ## Specification Templates
 
 Specification templates define the structure for spec documents produced by specification agents.
 
-### Location
-
-```
-templates/specs/
-├── business.template.md
-├── functional.template.md
-├── stack.template.md
-├── infrastructure.template.md
-└── coverage.template.md
-```
-
 ### Required Sections
 
-Every specification template MUST include:
+**Core structure:** Every specification template includes frontmatter (YAML metadata with state tracking), title (concept name), references (upstream spec links except Business), scope (inclusions and exclusions), layer-specific content (varies by layer), and acceptance criteria (testable requirements with IDs).
 
-| Section | Purpose |
-|---------|---------|
-| Frontmatter | YAML metadata with state tracking |
-| Title | Concept name |
-| References | Upstream spec links (except Business) |
-| Scope | What's included and excluded |
-| [Layer-specific content] | Varies by layer |
-| Acceptance Criteria | Testable requirements with IDs |
+**Frontmatter requirements:** All spec templates begin with YAML frontmatter containing required fields (identifier, initial draft status, creation timestamp, prompt version git hash) and optional fields added by implementation agents (implemented/deployed/validated timestamps). Specification agents generate frontmatter with required fields. Implementation agents update frontmatter as specs progress through phases.
 
-**Frontmatter Requirements:**
+### Compliance Principles
 
-All spec templates MUST begin with YAML frontmatter:
-
-```yaml
----
-id: [LAYER_PREFIX]-[CONCEPT]
-status: draft
-created: [TIMESTAMP]
-prompt_version: [GIT_HASH]
----
-```
-
-**Required frontmatter fields:**
-- `id`: Spec identifier (e.g., `BUS-LOGIN`, `FUN-AUTH-FLOW`)
-- `status`: Initial state is always `draft`
-- `created`: ISO8601 timestamp when spec generated
-- `prompt_version`: Git commit hash of prompt file at generation
-
-**Optional frontmatter fields** (added by implementation agents):
-- `implemented`: Timestamp when Development agent completed
-- `deployed`: Timestamp when Deployment agent completed
-- `validated`: Timestamp when Validation agent completed
-
-Specification agents MUST generate frontmatter with required fields. Implementation agents update frontmatter as specs progress through phases.
-
-### Compliance Rules
-
-When producing specs from templates:
-
-- Agents MUST use the template from `templates/specs/[LAYER].template.md`
-- Agents MUST produce consistent output structure across all runs
-- Agents MUST NOT add sections not defined in the template
-- Agents MUST NOT omit required sections from the template
-- Agents MUST NOT leave placeholder text in completed specs
-- Agents MUST minimize variance in generated artifacts
+**Template adherence:** When producing specs from templates, agents use the template from the appropriate layer, produce consistent output structure across runs, avoid adding undefined sections, avoid omitting required sections, avoid leaving placeholder text, and minimize variance in generated artifacts.
 
 ### Placeholder Handling
 
-- All placeholders MUST be replaced with actual content
-- If a section is not applicable, state "Not applicable: [reason]"
-- Empty sections are not permitted
+All placeholders receive replacement with actual content. If a section is not applicable, state "Not applicable" with reason. Empty sections are not permitted.
 
 ## Agent Templates
 
 Agent templates define the structure for agent definition files.
 
-### Location
-
-```
-templates/agents/
-├── specification-agent.template.md
-├── implementation-agent.template.md
-└── orchestrator-agent.template.md
-```
-
 ### Required Sections
 
-Every agent template MUST include:
-
-| Section | Purpose |
-|---------|---------|
-| YAML Frontmatter | name, description, tools |
-| Role | Agent's purpose, including core responsibilities |
-| Framework Reference | Links to relevant framework files |
-| Input | Upstream specs and user input |
-| Output | Location, template, format |
-| Directives | MUST/MUST NOT/SHOULD rules |
-| Completion Criteria | Self-validation checklist |
-| Failure Handling | Error response table |
+**Core structure:** Every agent template includes YAML frontmatter (name, description, tools), role (agent's purpose including core responsibilities), framework reference (links to relevant framework files), input (upstream specs and user input), output (location, template, format), directives (behavioral rules), completion criteria (self-validation checklist), and failure handling (error response patterns).
 
 ### Agent Definition Format
 
-Agent definitions use GitHub Custom Agent format:
-
-```
----
-name: smaqit.[layer]
-description: [One-line description]
-tools: ["read", "edit", "search"]
----
-
-# [Layer] Agent
-
-## Role
-...
-
-## Input
-...
-
-## Output
-...
-```
-
-Note: The code fence above is for illustration only. Actual agent files start directly with the YAML frontmatter (`---`).
+Agent definitions use GitHub Custom Agent format beginning with YAML frontmatter specifying name, description, and tools, followed by markdown sections defining role, input, output, and other requirements.
 
 ## Prompt Templates
 
 Prompt templates define the structure for prompt files that serve as input records and agent invocation interface.
 
-### Location
-
-```
-templates/prompts/
-├── specification-prompt.template.md
-├── implementation-prompt.template.md
-└── orchestrator-prompt.template.md
-```
-
 ### Required Sections
 
-Every prompt template MUST include:
-
-| Section | Purpose |
-|---------|---------|
-| YAML Frontmatter | name, description, agent |
-| Purpose | What this prompt captures |
-| Requirements | Sub-sections with suggested structure |
-| Comment Examples | `<!-- Example: ... -->` for guidance |
+**Core structure:** Every prompt template includes YAML frontmatter (name, description, agent), purpose (what this prompt captures), requirements (sub-sections with suggested structure), and comment examples (guidance showing format).
 
 ### Prompt Template Format
 
-Prompt templates use GitHub Copilot prompt format:
-
-```markdown
----
-name: smaqit.[layer]
-description: [One-line description]
-agent: smaqit.[layer]
----
-
-# [Layer] Prompt
-
-[Brief explanation]
-
-## Requirements
-
-[Sub-sections with suggested structure]
-
-<!-- Example: [Guidance showing format] -->
-
-[User fills requirements here]
-```
+Prompt templates use GitHub Copilot prompt format with YAML frontmatter followed by explanation and requirements sections with suggested structure.
 
 ### Free-Style with Structure
 
-Prompts are **free-style natural language inputs**, not rigidly structured forms. Templates provide:
-
-- **Suggested structure**: Sections and sub-sections to guide users
-- **Commented examples**: `<!-- Example: ... -->` showing good formats
-- **No enforcement**: Users write in their own words
-
-Agents interpret natural language and request clarification if needed. See [PROMPTS](PROMPTS.md) for complete principles.
+**Natural language input:** Prompts are free-style natural language inputs, not rigidly structured forms. Templates provide suggested structure (sections and sub-sections to guide users) and commented examples (showing good formats). No rigid enforcement—users write in their own words. Agents interpret natural language and request clarification if needed.
 
 ### Comment Convention
 
-Templates and shipped prompts include examples wrapped in HTML comments:
-
-```markdown
-### Actors
-
-<!-- Example: "Mario Fan - Users who love Nintendo's Mario franchise" -->
-
-[User writes actual actors here]
-```
-
-**Critical:** Agents MUST ignore HTML comments to prevent example requirements from contaminating generated specs.
+**Example guidance:** Templates and shipped prompts include examples wrapped in HTML comments. Agents ignore HTML comments to prevent example requirements from contaminating generated specs.
 
 ### Single Manifest Pattern
 
-Unlike specifications (one file per concept), prompts are **single manifest files**:
-
-- One prompt per layer captures all requirements for that layer
-- Users add features to existing prompts as projects evolve
-- Prompts become consolidated input records for entire project
+**Consolidated input:** Unlike specifications (one file per concept), prompts are single manifest files. One prompt per layer captures all requirements for that layer. Users add features to existing prompts as projects evolve. Prompts become consolidated input records for entire project.
 
 ## Template Completeness
 
-A template is complete when:
-
-- [ ] All required sections are present
-- [ ] Placeholders are clearly marked with `[PLACEHOLDER]` format
-- [ ] Section purposes are unambiguous
-- [ ] Layer-specific rules from LAYERS.md are incorporated (for spec templates)
-- [ ] Comment examples use `<!-- Example: ... -->` format (for prompt templates)
+**Complete templates:** A template is complete when all required sections are present, placeholders are clearly marked with bracket-SCREAMING_CASE format, section purposes are unambiguous, layer-specific rules from framework files are incorporated (for spec templates), and comment examples use HTML comment format (for prompt templates).
