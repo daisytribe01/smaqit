@@ -96,11 +96,9 @@ Specifications MUST reference their sources explicitly.
 
 **Cross-Layer Traceability:**
 
-Even though requirements come from prompt files per layer, the Implements/Enables references create an explicit chain for:
+Implements/Enables references create an explicit chain for:
 - **Impact analysis** — When a Business spec changes, all referencing specs are identified
 - **Coverage mapping** — Coverage can trace through references to ensure all requirements are verified
-
-Layer Independence does not mean layer isolation. The reference chain preserves traceability without creating requirement derivation.
 
 **Prompt File Traceability:**
 

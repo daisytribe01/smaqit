@@ -81,9 +81,7 @@ Each specification agent's Role section MUST include:
 2. **Goal** — What this agent produces and from what input
 3. **Context** — Single statement covering layer position and upstream relationship
 
-**Purpose:** Role section establishes agent identity and boundaries upfront, preventing scope confusion and context pollution in multi-agent workflows.
-
-**Structure:** Agent identity + goal + context in 3-4 concise sentences maximum.
+Agent identity + goal + context in 3-4 concise sentences maximum.
 
 ### Input
 - **Prompt file**: Requirements from `.github/prompts/smaqit.[layer].prompt.md` (the primary source)
@@ -124,12 +122,12 @@ Each layer reads from its own prompt file. Upstream layers provide context for c
 
 When users add requirements that could extend existing specifications, agents decide whether to update existing specs or create new ones:
 
-| Scenario | Action | Rationale |
-|----------|--------|-----------|
-| **Feature extends existing concept** | Update existing spec | Consolidates related requirements, maintains single source of truth |
-| **Feature is distinct new concept** | Create new spec with Foundation Reference | Preserves separation of concerns, references shared requirements |
-| **Shared infrastructure/base requirements** | Create foundation spec, reference from feature specs | Avoids conflicting sources of truth |
-| **Uncertainty** | Favor updating existing spec | Prevents duplication, easier to refactor later if needed |
+| Scenario | Action |
+|----------|--------|
+| **Feature extends existing concept** | Update existing spec |
+| **Feature is distinct new concept** | Create new spec with Foundation Reference |
+| **Shared infrastructure/base requirements** | Create foundation spec, reference from feature specs |
+| **Uncertainty** | Favor updating existing spec |
 
 **Examples:**
 
@@ -161,9 +159,7 @@ Each implementation agent's Role section MUST include:
 2. **Goal** — What this agent produces and from what input
 3. **Phase context** — Single statement covering phase position in workflow and scope
 
-**Purpose:** Role section establishes agent identity and workflow position upfront, preventing scope confusion in multi-phase execution.
-
-**Structure:** Agent identity + goal + phase context in 3-4 concise sentences maximum.
+Agent identity + goal + phase context in 3-4 concise sentences maximum.
 
 ### Input
 - Specification documents from relevant layers

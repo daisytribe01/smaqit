@@ -18,7 +18,7 @@ Each phase:
 3. **Implements** — Implementation agent produces and executes artifacts
 4. **Verifies** — Implementation agent confirms success before phase completion
 
-Phases are strictly sequential. Deploy cannot begin until Develop completes. Validate cannot begin until Deploy completes. This constraint is subject to revision based on real-world usage (see [SMAQIT](SMAQIT.md)).
+Phases are strictly sequential. Deploy cannot begin until Develop completes. Validate cannot begin until Deploy completes.
 
 ### Implementation Phase Principles
 
@@ -28,8 +28,6 @@ When an implementation agent processes work:
 1. Identifies specs via `smaqit plan --phase=[PHASE]` (returns target layer specs)
 2. References upstream specs for coherence/context
 3. Updates frontmatter in ALL referenced specs to reflect phase completion
-
-**Rationale:** If an implementation agent reads a specification for implementation context, that specification has been implemented/deployed/validated in that phase. Status must reflect reality for accurate lifecycle tracking.
 
 ## Phase Definitions
 
@@ -292,8 +290,6 @@ If prompt has content, agents interpret free-style requirements and request clar
 | Tests fail | Human decides: Develop, Deploy, or investigate |
 | Low coverage | Review Coverage specs for gaps |
 
-**Note:** Automated feedback routing is deferred to future versions. Currently, validation failures require human decision.
-
 ---
 
 ## Failure Handling
@@ -302,11 +298,11 @@ If prompt has content, agents interpret free-style requirements and request clar
 
 Implementation agents iterate on failures up to a configurable threshold:
 
-| Phase | Default Retries | Rationale |
-|-------|-----------------|-----------|
-| Develop | 3 | Code/test fixes typically converge quickly |
-| Deploy | 2 | Infrastructure issues often need investigation |
-| Validate | 0 | Failures require human analysis |
+| Phase | Default Retries |
+|-------|-----------------|
+| Develop | 3 |
+| Deploy | 2 |
+| Validate | 0 |
 
 ### Failure Documentation
 
@@ -406,14 +402,3 @@ Validate: 12 validated, 5 draft
 ```
 
 CLI aggregates status by scanning all spec frontmatter. No centralized state file.
-
----
-
-## Current Assumptions
-
-These assumptions are explicitly stated and subject to revision per [SMAQIT](SMAQIT.md):
-
-| Assumption | Status | Revision Trigger |
-|------------|--------|------------------|
-| Phases are strictly sequential | Active | Incremental deployment proves valuable |
-| Validation failures require human decision | Active | Patterns emerge for automated routing |

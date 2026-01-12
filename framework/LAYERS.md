@@ -33,11 +33,6 @@ Layers are worked through in order within each phase:
 
 **Phase 3 (Validate):** Coverage (reads all specs)
 
-The order provides context accumulation, not requirement derivation:
-- **Phase 1 layers** (Business through Stack): each provides cumulative context for subsequent layers
-- **Infrastructure** (Phase 2): uses all Phase 1 specs as coherence context
-- **Coverage** (Phase 3): validates against all layers
-
 ## Layer Definitions
 
 ### Business — Why?
@@ -71,8 +66,6 @@ When stakeholders have requirements about system properties (availability, audit
 | Actor | Description | Goals |
 |-------|-------------|-------|
 | System | The application as a whole | [System-level properties stakeholders require] |
-
-System actor specs remain business-level (stakeholder-driven) and do not prescribe technical solutions.
 
 ---
 
@@ -111,13 +104,9 @@ Functional specs come in two categories:
 | **Feature specs** | Implement a specific business use case | 1:1 mapping (Implements) |
 | **Foundation specs** | Enable multiple business use cases | 1:many mapping (Enables) |
 
-Foundation specs (shared components, cross-cutting concerns, common contracts) are legitimate engineering artifacts that serve multiple business goals.
-
 **Foundation spec rules:**
 - SHOULD reference all Business specs they enable
 - MUST flag absence of Business references with justification
-
-**Note:** Orphaned foundations (no Business references, no justification) indicate scope creep.
 
 ---
 
@@ -158,13 +147,9 @@ Stack specs come in two categories:
 | **Feature specs** | Technology choices for a specific feature | 1:1 mapping (Enables) |
 | **Foundation specs** | Base technologies enabling multiple features | 1:many mapping (Enables) |
 
-Foundation specs (base language environments, shared build tools, common dependencies) are legitimate engineering artifacts that serve multiple functional requirements.
-
 **Foundation spec rules:**
 - SHOULD reference all Functional specs they enable
 - MUST flag absence of Functional references with justification
-
-**Note:** Orphaned foundations (no Functional references, no justification) indicate scope creep.
 
 ---
 
@@ -205,13 +190,9 @@ Infrastructure specs come in two categories:
 | **Feature specs** | Infrastructure for a specific feature/component | 1:1 mapping (Enables) |
 | **Foundation specs** | Base infrastructure enabling multiple features | 1:many mapping (Enables) |
 
-Foundation specs (base networking, shared security policies, common observability configuration) are legitimate operational artifacts that serve multiple application components.
-
 **Foundation spec rules:**
 - SHOULD reference all Phase 1 specs (Business, Functional, Stack) they enable
 - MUST flag absence of Phase 1 references with justification
-
-**Note:** Orphaned foundations (no Phase 1 references, no justification) indicate scope creep.
 
 ---
 

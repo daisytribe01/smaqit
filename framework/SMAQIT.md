@@ -8,13 +8,13 @@ Spec-driven agent orchestration where specifications are split into layers and p
 
 **Each phase includes specifications and implementation together.**
 
-Phases are the primary workflow units in smaqit. Users can generate all specifications first, but the recommended approach is to complete each phase (specifications + implementation) before moving to the next. This provides faster feedback and validates the system incrementally.
+The recommended approach is to complete each phase (specifications + implementation) before moving to the next.
 
 ### Specs Before Code
 
 **Never write implementation without a corresponding specification.**
 
-Specifications are not documentation—they are the source of truth. Implementation agents consume specs as contracts, not guidelines. This inverts the common pattern where code comes first and docs follow.
+Specifications are the source of truth. Implementation agents consume specs as contracts, not guidelines.
 
 ### Traceability Across Layers
 
@@ -29,13 +29,11 @@ Specifications are not documentation—they are the source of truth. Implementat
 
 **Each layer's prompt file is the sole source of requirements for that layer.**
 
-Each layer has its own prompt file where users input requirements. Upstream layers provide context for coherence, not requirements. This ensures that user intent guides every layer without false derivation chains.
+Upstream layers provide context for coherence, not requirements.
 
 ### Single Source of Truth
 
-**Each piece of information should exist in exactly one place.**
-
-When information is needed in multiple contexts, reference the source rather than duplicate. Foundation specs contain shared requirements that multiple feature specs depend on. This prevents conflicting sources of truth, reduces maintenance burden, and ensures consistency across specifications.
+**Each piece of information exists in exactly one place.**
 
 - **Agents MUST NOT** duplicate information from existing specs—use Foundation Reference for same-layer or Implements/Enables for upstream
 - **Agents SHOULD** update existing specs when extending a concept, create new specs only for distinct concepts
@@ -45,34 +43,32 @@ When information is needed in multiple contexts, reference the source rather tha
 
 **Every requirement MUST be verified through traceable test coverage.**
 
-Traceability enables complete specification coverage: the Coverage layer traces requirements through all upstream specs to ensure nothing is missed. Untested requirements are explicit gaps, not silent omissions.
+The Coverage layer traces requirements through all upstream specs to ensure nothing is missed. Untested requirements are explicit gaps, not silent omissions.
 
 ### Self-Validating Agents
 
 **Agents validate their own output before declaring completion.**
 
-Agents are not fire-and-forget. Each agent has completion criteria and MUST verify them before finishing. This shifts quality assurance left—into the agent itself, not a separate review step.
+Each agent has completion criteria and MUST verify them before finishing.
 
 ### Bounded Agents
 
 **Agents execute only their designated layer or phase.**
 
-Each agent has a single responsibility. Agents decline out-of-scope requests with clear redirection to the appropriate agent. This enforces separation of concerns and prevents scope creep across workflow boundaries.
+Each agent has a single responsibility. Agents decline out-of-scope requests with clear redirection to the appropriate agent.
 
 ### Template-Constrained Output
 
 **Templates are cognitive scaffolds, not suggestions.**
 
-Templates define the exact structure agents MUST produce. This ensures:
+Templates define the exact structure agents MUST produce:
 - Consistent output across runs
 - Predictable input for downstream consumers
 - Reduced LLM variance
 
 ### Accept Mutability, Validate Behavior
 
-**Embrace non-determinism in artifacts, enforce determinism in outcomes.**
-
-LLMs rarely generate identical output twice. Rather than fighting this inherent variability, smaqit accepts it:
+**Enforce determinism in outcomes, not artifacts.**
 
 - **Mutable artifacts**: Code, configurations, and documents may vary between runs
 - **Immutable behavior**: Specifications define expected outcomes, not implementation details
@@ -80,9 +76,7 @@ LLMs rarely generate identical output twice. Rather than fighting this inherent 
 
 ### Reproducible from Input Set
 
-**Identical input sets should produce equivalent validated behavior.**
-
-The complete set of prompts across all layers defines a reproducible workflow. Given the same prompt set:
+**Identical input sets produce equivalent validated behavior.**
 
 - **Equivalent outcomes**: Acceptance criteria pass or fail consistently
 - **Traceable changes**: Modifying any prompt in the set reveals requirement changes explicitly
@@ -92,7 +86,6 @@ The complete set of prompts across all layers defines a reproducible workflow. G
 
 **Each layer addresses a distinct concern.**
 
-Layers are independent but must be coherent:
 - Business (intent) | Functional (behavior) | Stack (tools) | Infrastructure (environment) | Coverage (verification)
 - No layer derives requirements from another—each reads from its own prompt file
 - Implementation agents validate cross-layer coherence before execution
@@ -101,7 +94,7 @@ Layers are independent but must be coherent:
 
 **Specifications track their lifecycle state through implementation phases.**
 
-Specs are not static documents—they evolve through phases with tracked states:
+States:
 - **Draft**: Spec generated, ready for implementation
 - **Implemented**: Code generated, tests pass
 - **Deployed**: Running in target environment
