@@ -403,11 +403,15 @@ public async Task<Result> MethodName(Request request)
 - Acceptance criteria checkboxes updated in Infrastructure specs: `[ ]` → `[x]` or `[!]`
 - MUST NOT hardcode secrets (Isolation Principle)
 
-**Validate Phase → Reports:**
+**Validate Phase → Test Artifacts and Reports:**
+- Executable test files implementing Coverage spec scenarios
+- Test framework configuration (pytest.ini, jest.config.js, etc.)
+- CI/CD workflow for automated regression testing
 - Test results, coverage report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`, validation summary
 - Spec frontmatter: `status: validated`, `validated: [ISO8601_TIMESTAMP]`
 - MUST map results to Coverage spec test cases
 - MUST include spec coverage percentage
+- Test artifacts are committable and re-runnable independently
 
 **Phase State Tracking:**
 

@@ -215,19 +215,29 @@ If prompt has content, agents interpret free-style requirements and request clar
    e. Flags untestable criteria
 
 2. Validation agent:
-   a. Executes tests against deployed system
-   b. Collects pass/fail results per test case
-   c. Calculates spec coverage percentage
-   d. Produces validation report
+   a. Generates executable test artifacts from Coverage specs
+   b. Executes tests against deployed system
+   c. Collects pass/fail results per test case
+   d. Calculates spec coverage percentage
+   e. Produces validation report
 ```
 
 **Environment:** Same target environment as Deploy phase
 
-**Output:** Validation report in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
+**Output:**
+
+*Executable test artifacts:*
+- Test files implementing Coverage spec scenarios
+- Test framework configuration
+- CI/CD workflow for automated regression testing
+
+*Validation report* in `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md` containing:
 - Spec coverage percentage
 - Pass/fail status per requirement
 - Unverified requirements with justification
 - Failure details for failed tests
+
+Test artifacts are committable to version control and re-runnable independently, enabling continuous validation through CI/CD automation.
 
 **Failure Handling:**
 - Test failures do NOT trigger automatic retry
@@ -240,6 +250,9 @@ If prompt has content, agents interpret free-style requirements and request clar
 **Completion Criteria:**
 - [ ] Coverage specs produced with all testable criteria mapped
 - [ ] All coverage specs have `status: validated`
+- [ ] Executable test artifacts generated from Coverage specs
+- [ ] Test framework configuration generated
+- [ ] CI/CD workflow generated for automated regression testing
 - [ ] Tests executed against deployed system
 - [ ] Validation report written to `.smaqit/reports/validation-phase-report-YYYY-MM-DD.md`
 - [ ] Spec coverage percentage calculated
