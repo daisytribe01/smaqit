@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.8.2] - 2026-04-08
+
+### Changed
+- Promoted from beta to stable release
+
 ## [0.8.2-beta] - 2026-04-05
 
 ## [0.8.1-beta] - 2026-02-16
@@ -275,7 +280,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Each layer's prompt file is sole source of requirements
   - Upstream layers provide context, not requirements
 
-[Unreleased]: https://github.com/ruifrvaz/smaqit/compare/v0.8.2-beta...HEAD
+[Unreleased]: https://github.com/ruifrvaz/smaqit/compare/v0.8.2...HEAD
+[0.8.2]: https://github.com/ruifrvaz/smaqit/compare/v0.8.2-beta...v0.8.2
 [0.8.2-beta]: https://github.com/ruifrvaz/smaqit/compare/v0.8.1-beta...v0.8.2-beta
 [0.8.1-beta]: https://github.com/ruifrvaz/smaqit/compare/v0.8.0-beta...v0.8.1-beta
 [0.8.0-beta]: https://github.com/ruifrvaz/smaqit/compare/v0.7.0-beta...v0.8.0-beta
