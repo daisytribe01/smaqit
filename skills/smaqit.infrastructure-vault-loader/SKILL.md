@@ -2,7 +2,7 @@
 name: smaqit.infrastructure-vault-loader
 description: Use before any local deployment or credential operation that requires secrets from a local HashiCorp Vault instance. Verifies Vault is running, unsealed, and authenticated on 127.0.0.1:8200. Also runs an interactive credential loader script that prompts for all project secrets and writes them to Vault. Use for first-time setup, adding a new project's credentials, or when a Vault path is missing. Also use when setting up Vault for the first time on a new machine, or when a caller cannot reach Vault and needs troubleshooting guidance.
 metadata:
-  version: "2.0.0"
+  version: "2.1.0"
 ---
 
 # Vault Loader
@@ -45,10 +45,10 @@ Verify: `vault version`
 ### 2. Create config file
 
 ```bash
-mkdir -p ~/.vault/data
-cat > ~/.vault/config.hcl << 'EOF'
+mkdir -p ~/.vault-server/data
+cat > ~/.vault-server/config.hcl << 'EOF'
 storage "file" {
-  path = "/home/<your-username>/.vault/data"
+  path = "/home/<your-username>/.vault-server/data"
 }
 
 listener "tcp" {
@@ -56,17 +56,22 @@ listener "tcp" {
   tls_disable = true
 }
 
+disable_mlock = true
 ui = false
 EOF
 ```
 
 Replace `<your-username>` with your actual username.
 
+CRITICAL: Use `~/.vault-server/` (not `~/.vault/`). Vault uses `~/.vault` as its default
+token helper location and will fail with `failed to get token helper: read ~/.vault: is a directory`
+if a directory exists there.
+
 ### 3. Start Vault and initialise
 
 ```bash
 # Start the server (keep this terminal open or run in background)
-vault server -config=~/.vault/config.hcl &
+vault server -config=~/.vault-server/config.hcl &
 
 export VAULT_ADDR=http://127.0.0.1:8200
 
@@ -168,7 +173,7 @@ bash .github/skills/smaqit.infrastructure-vault-loader/scripts/load-credentials.
    ```
    If not running:
    ```bash
-   vault server -config=~/.vault/config.hcl &
+   vault server -config=~/.vault-server/config.hcl &
    sleep 1
    ```
 
@@ -221,6 +226,24 @@ bash .github/skills/smaqit.infrastructure-vault-loader/scripts/load-credentials.
 
 ## Gotchas
 
+- **`~/.vault` directory conflict** — Vault uses `~/.vault` as its default token helper file.
+  If a directory exists there, Vault fails with `failed to get token helper: read ~/.vault: is a directory`.
+  Always use `~/.vault-server/` (or any other name) for config and data directories.
+- **SSH private key trailing newline** — `vault kv put` may strip the trailing newline from the
+  private key, causing `Load key: error in libcrypto` on fetch. Fix: store the key base64-encoded
+  (`base64 -w0 <key>`) and decode on fetch (`base64 -d`). The `load-credentials.sh` script handles
+  this automatically for new keys; when manually updating, use:
+  ```bash
+  vault kv put secret/<slug>/ssh private_key="$(base64 -w0 <key>)" ...
+  ```
+- **Shell expansion of `$` in bcrypt hashes** — if you need to insert bcrypt-hashed passwords
+  via shell (e.g., `psql`), the `$2b$` prefix is interpreted as shell variable expansion.
+  Use Python inside the target container to insert hashed values directly:
+  ```python
+  import bcrypt, uuid
+  hash = bcrypt.hashpw(b'password', bcrypt.gensalt(prefix=b'2b')).decode()
+  # INSERT via SQLAlchemy
+  ```
 - **`tls_disable = true` is safe for localhost only** — never bind Vault to a non-loopback
   address with TLS disabled
 - **`-key-shares=1 -key-threshold=1`** — single unseal key for simplicity. Acceptable for a

@@ -2,7 +2,7 @@
 name: smaqit.infrastructure-provision-cyso
 description: Use when provisioning cloud infrastructure for the HIM Corporate application on Cyso Cloud (OpenStack) using Terraform. Covers application credential sourcing, Object Storage backend initialization, SSH keypair variable configuration, `terraform init/plan/apply`, and fixed IP retrieval. Produces a running Cyso VM accessible via SSH, with Cinder data volume attached and security group configured on ports 22/80/443. Also use when re-running Terraform after infrastructure changes or when an operator invokes `/provision.cyso`.
 metadata:
-  version: "1.0.0"
+  version: "1.1.0"
 ---
 
 # Provision Target: Cyso Cloud
@@ -14,7 +14,7 @@ metadata:
 - Object Storage state bucket created in Cyso dashboard (private); S3 access key + secret key loaded into Vault at `secret/<project-slug>/tfstate`
 - SSH keypair generated (passphrase-free) and loaded into Vault at `secret/<project-slug>/ssh` (both private and public key fields)
 - Fine-grained GitHub PAT with `variables:write` loaded into Vault at `secret/<project-slug>/github`
-- Terraform 1.14+ installed locally
+- Terraform 1.14+ installed locally (`sudo apt install -y terraform` via HashiCorp repo; already configured if Vault was installed from same repo)
 - Local Vault running and unsealed (`smaqit.infrastructure-vault-loader` complete)
 
 <!-- amendment: 2026-05-25 — credential sourcing moved from OpenRC file + manual exports to local Vault (smaqit.infrastructure-vault-loader). SSH key no longer stored at ~/.ssh/him_deploy_key. OpenRC file no longer required. -->
@@ -43,10 +43,13 @@ metadata:
 
 3. **Confirm Ubuntu image ID and flavor** (catalog values change occasionally):
    ```bash
-   openstack image list | grep "Ubuntu 22.04"
+   openstack image list | grep "Ubuntu 24.04"
    openstack flavor list
    ```
    If IDs differ from the defaults in `deployment/terraform/main.tf`, update that file before continuing.
+   Verified reference values (2026-04-05):
+   - Image: `fd91e198-f162-4b6b-a23e-123304fb408a` (Ubuntu 24.04 LTS)
+   - Flavor: `s5.small` (2 vCPU, 8 GB RAM, 50 GB disk, €17.50/mo)
    Note: `openstack` CLI must be available; auth is implicit via `TF_VAR_app_credential_*` env vars
    set above — no OpenRC file is required.
 
@@ -125,6 +128,19 @@ accessible with `him_deploy_key`, Terraform state in `him-corporate-tfstate`. Re
   applies are stable. The variable name is `TF_VAR_ssh_public_key` (all lowercase) — matches
   `var.ssh_public_key` in `variables.tf`.
 
+- Use `endpoints.s3` (plural), NOT `endpoint` (deprecated in Terraform 1.15+).
+  `skip_requesting_account_id = true` is REQUIRED for non-AWS S3. `use_path_style` replaces
+  deprecated `force_path_style`. The state bucket must be pre-created in the Cyso dashboard.
+
+- **Provider credential passing:** The OpenStack provider does NOT auto-detect `TF_VAR_*` env vars.
+  Pass credentials explicitly: `application_credential_id = var.app_credential_id` and
+  `application_credential_secret = var.app_credential_secret` in the provider block.
+  GitHub provider also needs explicit `token = var.github_token` and `owner = "<username>"`.
+
+- **Terraform install:** May not be pre-installed. If `command not found`:
+  `sudo apt update && sudo apt install -y terraform`. The HashiCorp apt repo is already
+  configured if Vault was installed from it.
+
 - **Provider lock file platform mismatch** — `.terraform.lock.hcl` is committed with hashes for
   `linux_amd64` and `darwin_arm64`. Regenerate if running on a different platform:
   `terraform providers lock -platform=<platform>`.
@@ -156,7 +172,7 @@ accessible with `him_deploy_key`, Terraform state in `him-corporate-tfstate`. Re
 | Subagent invocation fails | Report the failure with context; do not silently retry |
 | Output artifact already exists | Confirm with user before overwriting |
 | `openstack token issue` fails | Re-source OpenRC; check if application credential has expired |
-| `terraform init` backend connectivity failure | Verify `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY` are set; check Object Storage endpoint in `backend.tf` |
+| `terraform init` backend connectivity failure | Verify `AWS_ACCESS_KEY_ID` / `AWS_SECRET_ACCESS_KEY`; check `endpoints.s3` and `skip_requesting_account_id` in backend.tf |
 | Image ID not found | Run `openstack image list`; update `variables.tf` with current ID |
 | Keypair replacement shown in plan | Strip trailing newline; re-export `TF_VAR_ssh_public_key` using `tr -d '\n'` |
 | SSH access fails after apply | Verify security group allows port 22; confirm key fingerprint matches uploaded keypair |
