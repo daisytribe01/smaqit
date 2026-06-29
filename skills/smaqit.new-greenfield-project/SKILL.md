@@ -82,7 +82,10 @@ Validates the full infrastructure and deployment approach on a dedicated dev VM 
 3. Invoke `@smaqit.deployment` agent with context: generate all IaC artifacts — Terraform files in `deployment/terraform/` and GitHub Actions workflow files in `.github/workflows/` using `smaqit.infrastructure-cicd-generate` patterns as reference; Terraform state key `dev/terraform.tfstate`; do not trigger deployment execution.
 4. Invoke `smaqit.infrastructure-provision-cyso` with dev environment variables. Note the `fixed_ip` output.
 5. Invoke `smaqit.infrastructure-vm-bootstrap` with the dev VM `fixed_ip`.
-6. Invoke `smaqit.infrastructure-deploy-rsync` to deploy to the dev VM.
+6. Invoke the appropriate deploy skill based on project type (detected from stack spec `specs/stack/platform-stack.md`):
+   - **Node.js + Vite/React** → `smaqit.infrastructure-deploy-rsync`
+   - **Python/FastAPI + Next.js** → `smaqit.infrastructure-deploy-rsync-python-nextjs`
+   If neither matches, default to `smaqit.infrastructure-deploy-rsync` and adapt steps as needed.
 7. Invoke `smaqit.infrastructure-deploy-verify` against the dev VM. If any check fails, stop and fix before continuing.
 8. If any infrastructure or stack spec required amendment to proceed: amend in-place with an `amendment:` annotation.
 9. Commit all generated IaC artifacts: `git add deployment/ .github/workflows/ && git commit -m "ci: add infrastructure and CI/CD workflows"`.
@@ -150,7 +153,7 @@ If skipped: application is accessible at `http://<fixed_ip>`. Document as an ope
 ## Gotchas
 
 - **Spec amendment protocol** — when an implementation phase must diverge from a spec (package mismatch, config change, structural adaptation): amend the spec in-place with an `amendment:` annotation describing what changed and why. Tactical divergences (versions, minor config) proceed autonomously. Structural divergences (data model, architecture) require operator approval before continuing. At `task-complete` time, the amendment is captured in `Decisions made`. Phase 8 runs `check-amendments.sh` to detect any open annotations; if none are found the review step is skipped.
-- **Source path contract** — `smaqit.infrastructure-deploy-rsync` and generated CI/CD workflows assume `backend/` and `frontend/` as local source directories. The `@smaqit.stack` agent (Phase 2) must declare these exact paths in the stack spec. If the project type differs (e.g. api-only), instruct the stack agent explicitly.
+- **Source path contract** — deploy skills assume `backend/` and `frontend/` as local source directories. The `@smaqit.stack` agent (Phase 2) must declare these exact paths in the stack spec. The deploy skill is chosen based on project type: Node.js+Vite uses `smaqit.infrastructure-deploy-rsync`; Python+Next.js uses `smaqit.infrastructure-deploy-rsync-python-nextjs`. If the project type differs from both, instruct the stack agent explicitly.
 - **Separate Terraform state keys** — dev and production must use different state keys (e.g. `dev/terraform.tfstate` vs `prod/terraform.tfstate`). Using the same key causes state conflicts and unintended VM replacement.
 - **`GITHUB_TOKEN` reserved name** — enforced in Phase 5 via `smaqit.infrastructure-repo-config`. Never set an env var named `GITHUB_TOKEN` in any workflow to a PAT.
 - **PR body sentinel** — Coding Agent must include `smaqit:deploy` as a line in any PR body to trigger post-merge deployment. Must be set at PR creation time, not via label.
